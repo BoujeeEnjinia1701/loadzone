@@ -1,0 +1,17 @@
+# Card metadata consumed by https://designmolecule.com
+name: LoadZone
+slug: loadzone
+area: Smart Cities
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
+problem: >-
+  Delivery vehicles double-park when loading bays are occupied or unknown, blocking lanes and bike paths.
+budget_usd: 120
+difficulty: 2  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [smart-cities, open-hardware, cern-ohl-s]
