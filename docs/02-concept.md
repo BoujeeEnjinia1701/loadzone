@@ -3,7 +3,7 @@ doc_id: LDZ-PRC-001
 title: LoadZone design precis
 project: LoadZone
 doc_type: Design precis
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,13 +21,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3 figures from LDZ-CAL-001; design choices adopted for TRL 3 under LDZ-DDR-001; parametric model and drawing LDZ-DWG-001
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # LoadZone design precis
 
 ## Summary
 
-LoadZone is a low, battery-powered puck bonded to the road in the middle of each vehicle slot of a loading bay. A 3-axis magnetometer senses the change in the Earth's magnetic field when a vehicle's steel body parks over it, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" in about 18 s (39 s at worst at SF9). A server turns the reports into bay state, dwell times and an open data feed that maps onto the Curb Data Specification, and, as an option, a solar e-paper sign on an existing pole shows approaching drivers how many slots are free. The TRL 3 calculations (LDZ-CAL-001) give a cell life of 7.7 years at SF9 on two AA-size lithium thionyl chloride cells and a two-slot bay kit of $114.00 in parts, within the $120 budget. They also find the weak points: from road level under a parked van a puck reaches a gateway about 350 m away in a street canyon, not the 1 km of R4; the road bond is at risk under braking; and the sign is unlit at night. The design choices below are adopted for TRL 3 work under Amish's 2026-09-25 instruction, open for his review (LDZ-DDR-001).
+LoadZone is a low, battery-powered puck bonded to the road in the middle of each vehicle slot of a loading bay. A 3-axis magnetometer senses the change in the Earth's magnetic field when a vehicle's steel body parks over it, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" in about 18 s (39 s at worst at SF9). A server turns the reports into bay state, dwell times and an open data feed that maps onto the Curb Data Specification, and, as an option, a solar e-paper sign on an existing pole shows approaching drivers how many slots are free. The TRL 3 calculations (LDZ-CAL-001) give a cell life of 7.7 years at SF9 on two AA-size lithium thionyl chloride cells and a two-slot bay kit of $114.00 in parts, within the $120 budget. They also find the weak points: from road level under a parked van a puck reaches a gateway only about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4 as restated); the road bond is at risk under braking; and the sign is unlit, so it serves drivers by day only (R11 as restated). The design choices below were decided by Amish on 2026-09-25 (LDZ-DDR-001 and LDZ-DDR-002).
 
 ![LoadZone concept](../media/hero.png)
 
@@ -37,7 +41,7 @@ Figure 1. Concept massing model in a two-slot loading bay: the free slot (teal) 
 
 1. **Sense.** Each puck wakes about once a second and takes a single magnetometer reading. With no vehicle, the reading is the local Earth field plus a fixed offset learned at install. A car or van parked above distorts the field by several microtesla (estimate), mostly in the vertical axis.
 2. **Decide.** Firmware compares the field change with an adaptive threshold and requires the new state to hold for about 15 s before accepting it, so traffic passing in the next lane and vehicles pausing briefly do not count. The baseline is re-learned slowly while the slot is free, to follow temperature drift and road works nearby.
-3. **Report.** On each confirmed change, and hourly as a heartbeat, the puck sends a 12-byte LoRaWAN uplink: slot state, time since the last change, a confidence value, cell voltage and temperature. No raw magnetic data leave the device by default.
+3. **Report.** On each confirmed change, and hourly as a heartbeat, the puck sends a 12-byte LoRaWAN uplink: slot state, time since the last change, a confidence value, cell voltage and temperature. If the band is US915, the payload is packed to 11 bytes so that it fits the slowest US915 rate (LDZ-DDR-002). No raw magnetic data leave the device by default.
 4. **Aggregate.** A LoRaWAN network server (TwinKit, The Things Network or a city network) passes uplinks to a small open service that keeps bay state, computes occupancy and dwell time, and publishes them in a form that maps onto the Curb Data Specification Events and Metrics APIs ([Open Mobility Foundation](https://www.openmobilityfoundation.org/about-cds/)).
 5. **Show (option).** A FieldNode on a nearby pole, running as a LoRaWAN class C device, receives a short downlink when the bay state changes and redraws a 7.5 in e-paper panel set into a "Loading zone" sign: the number of free slots and an arrow. The same state can appear in carriers' routing tools and city maps through the data feed.
 
@@ -57,7 +61,7 @@ Table 1. Components (numbers match `bom/bom.csv` and Figure 3)
 | 4 | Antenna | Flexible PCB antenna for 868 or 915 MHz, fixed inside the dome wall, above the cells |
 | 5 | Cells | Two AA-size Li-SOCl2 bobbin cells (about 2.6 Ah each, typical rating) in parallel through one Schottky diode each, with an 85 °C hybrid pulse capacitor to supply transmit current |
 | 6 | Base and potting | Flat 150 x 6 mm base disc; the dome cavity is fully potted in semi-rigid polyurethane, which carries wheel loads through to the base |
-| 7 | Road adhesive pad | Bitumen pad or two-part road-marker epoxy, as used for raised pavement markers |
+| 7 | Road-marker epoxy bed | Two-part road-marker epoxy, as used for raised pavement markers, as a 170 mm bed about 3 mm thick (LDZ-DDR-002; a bitumen pad is no longer used) |
 | 8 | Sign face (option) | Aluminium composite panel, 450 x 600 mm, "Loading zone" legend and a window for the display |
 | 9 | Display (option) | 7.5 in e-paper panel with driver board, behind a polycarbonate window in a sealed housing |
 | 10 | Sign clamps (option) | Two stainless band clamps with brackets for 60 to 90 mm poles |
@@ -71,11 +75,11 @@ Figure 3. Exploded view; callout numbers match `bom/bom.csv`. The puck is drawn 
 
 Figure 4. Puck cutaway: potting (grey) fills the dome around the cells (orange), the radio board (teal) and the antenna at the dome's edge; the magnetometer sits on the board behind the section plane.
 
-The parametric model is `cad/src/model.py` (STEP and STL in `cad/step/` and `cad/stl/`), and the general arrangement of the puck is drawing LDZ-DWG-001 at Rev P1 in `cad/drawings/`.
+The parametric model is `cad/src/model.py` (STEP and STL in `cad/step/` and `cad/stl/`), and the general arrangement of the puck is drawing LDZ-DWG-001 at Rev P2 in `cad/drawings/`.
 
 ## First-order numbers
 
-All values are from LDZ-CAL-001 v0.1, which the script `docs/04-calcs/sizing.py` reproduces. They are paper estimates, not measurements.
+All values are from LDZ-CAL-001 v0.2, which the script `docs/04-calcs/sizing.py` reproduces. They are paper estimates, not measurements.
 
 Table 2. Puck energy budget at SF9
 
@@ -96,11 +100,11 @@ Table 2. Puck energy budget at SF9
 
 **Detection.** The Earth's field is roughly 25 to 65 µT, well within the sensor's ±50 gauss (±5,000 µT) range. A line-dipole model calibrated to an assumed 10 µT under a parked van gives 10.6 µT for a car, 7.7 µT for a high-chassis box truck and 3.85 µT for a truck with little low steel, against a 3 µT threshold, while a van in the next lane gives 0.46 µT. The slot-center position sees vehicles anywhere in the slot and ignores neighbors; high-clearance trucks are the weak case, and R1 stays unverified until field data exist.
 
-**Link.** At 11.5 dBm EIRP the SF9 link budget is 141.0 dB. With 10 dB lost at road level and 10 dB to a van overhead, the 3GPP urban microcell street-canyon model leaves -6.0 dB at 1 km out of sight and 2.6 dB in line of sight; the range out of sight is about 350 m with a 10 dB fade margin. R4 (1 km) is not met; a gateway within about 300 m of each bay is proposed (LDZ-DDR-001, O2).
+**Link.** At 11.5 dBm EIRP the SF9 link budget is 141.0 dB. With 10 dB lost at road level and 10 dB to a van overhead, the 3GPP urban microcell street-canyon model leaves -6.0 dB at 1 km out of sight and 2.6 dB in line of sight; the range out of sight is about 350 m with a 10 dB fade margin. The original 1 km target is not reachable, so R4 is restated as a gateway within 300 m of each bay (LDZ-DDR-002), which the 353 m range meets on paper.
 
-**Load.** A 49 kN wheel (half of a 10 t axle) on the 92 mm flat crown gives 7.38 MPa, or 9.59 MPa with a 1.3 dynamic factor: a factor of 5.4 on rigid cast polyurethane and 2.0 on the potting beneath. The bond is the weak point: a braking tire could push 34.3 kN sideways, 1.51 MPa on the pad, against about 1.0 MPa for adhesive on asphalt at 20 °C and much less when hot. A vehicle parked inside the bay lines keeps its tires at least 275 mm from the puck axis, so only maneuvering wheels cross it (R6 at risk).
+**Load.** A 49 kN wheel (half of a 10 t axle) on the 92 mm flat crown gives 7.38 MPa, or 9.59 MPa with a 1.3 dynamic factor: a factor of 5.4 on rigid cast polyurethane and 2.0 on the potting beneath. The bond is the weak point: a braking tire could push 34.3 kN sideways, 1.51 MPa on the bed, against about 1.0 MPa for two-part epoxy on asphalt at 20 °C and much less when hot. A vehicle parked inside the bay lines keeps its tires at least 275 mm from the puck axis, so only maneuvering wheels cross it; R6 is restated on that basis with an epoxy bed (LDZ-DDR-002) and stays at risk.
 
-**Sign.** Class C listening costs 15.2 mW and about 200 e-paper redraws a day add 0.015 Wh; the sign draws 0.42 Wh a day (17.7 mW), well within FieldNode's allowance of 100 to 115 mW. Digits 78 mm high read at about 28 m by day on the MUTCD legibility index, better than the 10 m estimated at TRL 2, but the panel is unlit at night (R11 not met) and a 0.5 W front light would need 6.0 Wh a day, 2.5 times the allowance. The sign takes about 200 downlinks a day, far above The Things Network's 10, so it needs a private network server such as TwinKit. Typical 7.5 in e-paper panels operate from about 0 to 50 °C, so refresh on freezing days is a limit to check.
+**Sign.** Class C listening costs 15.2 mW and about 200 e-paper redraws a day add 0.015 Wh; the sign draws 0.42 Wh a day (17.7 mW), well within FieldNode's published allowance of 100 mW. Digits 78 mm high read at about 28 m by day on the MUTCD legibility index, better than the 10 m estimated at TRL 2, but the panel is unlit, and a 0.5 W front light would need 6.0 Wh a day, 2.5 times the allowance, so R11 is restated as a daylight-only target (LDZ-DDR-002) and met on paper. The sign takes about 200 downlinks a day, far above The Things Network's 10, so it needs a private network server such as TwinKit (decided, LDZ-DDR-002). Typical 7.5 in e-paper panels operate from about 0 to 50 °C, so refresh on freezing days is a limit to check.
 
 **Mass and size.** Puck 451 g without the pad (75 g), 150 mm diameter, 31 mm high.
 
@@ -108,20 +112,23 @@ Table 2. Puck energy budget at SF9
 
 ## Key design choices
 
-Choices 1 to 7 are adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (LDZ-DDR-001, D1 to D8). Choice 8 follows from choice 2.
+Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendation (LDZ-DDR-001, D1 to D8, and LDZ-DDR-002). Choice 8 follows from choice 2.
 
 1. **Surface-bonded puck rather than an in-ground (cored) sensor.** No road works for a pilot and easy removal. In-ground units are better protected from plows and theft, so a cored variant stays open for deployments.
 2. **Magnetometer only, rather than magnetometer plus radar.** Lowest cost and power. A small radar looking up through the dome could confirm detections; it stays an open option if R1 is not met in trials.
 3. **One puck per vehicle slot of about 7 m**, rather than one per bay. Bays hold one to three vans; slot-level state lets the sign say "1 free" rather than "space somewhere".
 4. **Primary Li-SOCl2 cells rather than rechargeable cells with a solar cell on the puck.** A road-level solar cell is shaded by parked vehicles and soiled by tires. Two AA cells give margin over the 5-year target.
-5. **LoRaWAN with the FieldNode core.** Shared firmware, tools and gateways across the lab. The sign, as a class C device, receives state by downlink (D7). At about 200 downlinks a day this needs a private network server such as TwinKit; on The Things Network the sign would have to listen to the pucks directly (LoRa point to point), which also keeps it working when the internet link is down (LDZ-DDR-001, O5).
-6. **E-paper sign as an option, not the core.** It needs no power to hold an image and is readable in sun, but it is small and unlit (R11 not met). Many drivers may use the data through routing tools instead, which co-design should test.
+5. **LoRaWAN with the FieldNode core.** Shared firmware, tools and gateways across the lab. The sign, as a class C device, receives state by downlink (D7). At about 200 downlinks a day this needs a private network server such as TwinKit; on The Things Network the sign would have to listen to the pucks directly (LoRa point to point), which also keeps it working when the internet link is down. The sign option therefore requires a private network server or a city network that allows the downlinks (LDZ-DDR-002, O5).
+6. **E-paper sign as an option, not the core.** It needs no power to hold an image and is readable in sun, but it is small and unlit, so its target is daylight only (R11) and drivers use the data feed at night. Many drivers may use the data through routing tools instead, which co-design should test.
 7. **Open data in a Curb Data Specification form**, so a city can compare LoadZone with carrier and payment data.
 8. **Privacy by physics.** The puck senses only a magnetic field, so it cannot identify vehicles or people even if its firmware is changed.
+9. **Two-part road-marker epoxy bed** rather than a bitumen pad, for bond strength, with R6 restated around maneuvering wheels (LDZ-DDR-002, O3). Pull-off testing is TRL 4 work and on hold.
+10. **A gateway within 300 m of each bay** (R4 restated, LDZ-DDR-002, O2), which also keeps pucks at SF9 or faster for R2, R3 and R5.
+11. **Supply and potting details:** one Schottky diode per cell, an 85 °C hybrid pulse capacitor, a fully potted cavity and a 6 mm crown radius (LDZ-DDR-002, O6), and an 11-byte payload if the band is US915 (O7).
 
 ## Relationship to other lab projects
 
-- **FieldNode** provides the controller and radio core (the STM32WL-class module) for the puck and the complete host node for the sign option, as its README lists LoadZone among adopting projects. LoadZone uses FieldNode's radio currents and its $126.00 core cost (FND-CAL-001); the sign's 17.7 mW fits both the published 115 mW allowance and the 100 mW FieldNode now proposes.
+- **FieldNode** provides the controller and radio core (the STM32WL-class module) for the puck and the complete host node for the sign option, as its README lists LoadZone among adopting projects. LoadZone uses FieldNode's radio currents and its $126.00 core cost (FND-CAL-001); the sign's 17.7 mW fits FieldNode's published 100 mW allowance.
 - **TwinKit** is the default gateway and data platform, and the sign option needs it (or another private network server) for its class C downlinks; for the pucks alone, any LoRaWAN network server works.
 - **CurbCount** counts people, bicycles and vehicles passing the curb; LoadZone reports who is stopped at it. Both would feed **CityTwin**.
 - **CalRig** could check magnetometer offset and noise before installation.
@@ -132,7 +139,7 @@ Choices 1 to 7 are adopted as recommended for TRL 3 under Amish's 2026-09-25 ins
 
 > **Safety:** Lithium thionyl chloride cells are primary lithium cells. Do not recharge, short, crush, heat or open them; they can vent toxic and corrosive gas and burn. Connect the two cells in parallel only through one diode each so that one cell can never charge the other, fit a fuse, keep the pulse capacitor within its voltage and temperature rating, and recycle spent cells as hazardous waste.
 
-> **Safety:** Road-marker epoxy and bitumen adhesives can be hot or chemically hazardous. Follow the maker's safety data sheet, wear gloves and eye protection, and ventilate. Polyurethane casting resins contain isocyanates; cast only with ventilation and suitable respiratory protection.
+> **Safety:** Two-part road-marker epoxy is chemically hazardous and some grades are applied hot; uncured resin and hardener irritate skin and can sensitize. Follow the maker's safety data sheet, wear gloves and eye protection, and ventilate. Polyurethane casting resins contain isocyanates; cast only with ventilation and suitable respiratory protection.
 
 > **Safety:** The puck is a raised object in the roadway. Keep it low with rounded edges, place it away from bike lanes and crosswalks, and keep it high-visibility. Check after install that it is fully bonded, since a loose puck can be thrown by a tire.
 
@@ -141,8 +148,8 @@ Choices 1 to 7 are adopted as recommended for TRL 3 under Amish's 2026-09-25 ins
 ## Open questions
 
 - [ ] Detection accuracy with magnetometer only, especially for high-clearance trucks: is a radar or second magnetometer needed to meet R1? Awaiting field data.
-- [ ] Gateway spacing: restate R4 as a gateway within about 300 m of each bay (LDZ-DDR-001, O2)?
-- [ ] Bond: two-part road-marker epoxy rather than a bitumen pad, and a restated R6 (O3)?
-- [ ] Sign: accept a daylight-only target, move to a lit display with its own power, or drop the sign in favor of the data feed (O4)? It needs a private network either way (O5).
-- [ ] Which city, business district or carrier would host a first trial, and on which LoRaWAN band (O1)? In US915 the payload must shrink to 11 bytes (O7).
+- [x] Gateway spacing: a gateway within 300 m of each bay (R4 restated, LDZ-DDR-002).
+- [x] Bond: two-part road-marker epoxy, with R6 restated (LDZ-DDR-002).
+- [x] Sign: daylight-only target, on a private network server (LDZ-DDR-002).
+- [ ] Which city, business district or carrier would host a first trial, and on which LoRaWAN band (O1)? Proposed, awaiting Amish. If US915, the payload is packed to 11 bytes (decided).
 - [ ] Snow and plows: can a surface puck survive where roads are plowed, or is a cored variant required in those climates?

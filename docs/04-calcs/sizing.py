@@ -1,4 +1,4 @@
-"""LoadZone sizing calculations, LDZ-CAL-001 v0.1 (TRL 3).
+"""LoadZone sizing calculations, LDZ-CAL-001 v0.2 (TRL 3, LDZ-DDR-002 applied).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md (tags in brackets, for example
@@ -59,7 +59,8 @@ H_GW = 10.0              # m, gateway on a pole or low roof in a street canyon (
 GROUND_LOSS = 10.0       # dB, antenna about 25 mm above the road (estimate)
 VEH_LOSS = (10.0, 20.0)  # dB, vehicle parked over the puck, typical and worst (estimate, TRL 2)
 FADE = 10.0              # dB
-D_REQ = 1.0              # km (R4)
+D_REQ = 1.0              # km, the TRL 2 target, kept for comparison
+R4_REQ_M = 300.0         # m, R4 as restated under LDZ-DDR-002 (gateway within 300 m of the bay)
 # Cells (DDR-001, D4)
 CELL_AH, N_CELLS = 2.6, 2
 DERATE = 0.40            # cold, pulse loads, self-discharge, end-of-life voltage
@@ -81,7 +82,7 @@ DYN = 1.3                # dynamic factor for slow maneuvering over the puck
 MU = 0.7                 # tire to puck friction for braking or scrubbing
 SIG_PU = 40.0            # MPa, rigid cast polyurethane compressive strength (typical range 30 to 80)
 SIG_POT = 15.0           # MPa, semi-rigid potting compound compressive strength (assumed)
-TAU_BOND = {"20 C": 1.0, "50 C": 0.2}       # MPa, adhesive to asphalt surface shear (assumed)
+TAU_BOND = {"20 C": 1.0, "50 C": 0.2}       # MPa, two-part road-marker epoxy to asphalt surface shear (assumed; DDR-002)
 BAY_W, VAN_W, VAN_TRACK, TIRE_W = 2.6, 2.0, 1.75, 0.225   # m
 CAR_W, CAR_TRACK, CAR_TIRE = 1.8, 1.55, 0.20
 # Mass
@@ -93,7 +94,7 @@ P_RX = I_RX * V_SYS                          # W, class C receiver on continuous
 P_SLEEP_SIGN = 30e-6 * V_SYS                 # W, controller and panel driver idle
 E_REDRAW = 0.0264 * 5 + I_MCU * V_SYS * 5    # J: panel 26.4 mW for 5 s plus controller awake 5 s (typical 7.5 in panel)
 ETA_RAIL = 0.90
-ALLOW = {"115 mW (published)": 0.115, "100 mW (proposed in FieldNode)": 0.100}
+ALLOW = {"100 mW (published, FND-DDR-002)": 0.100}
 PANEL_H_MM = 97.9                            # active area height of a 7.5 in 800 x 480 panel
 DIGIT_FRAC = 0.80
 LI_M_PER_MM = 30 * 0.3048 / 25.4            # MUTCD legibility index 30 ft per inch
@@ -121,6 +122,10 @@ for sf in range(7, 13):
     hb_txt = f"heartbeat every {24 / hb_room:.1f} h fits" if hb_room >= 1 else "does not fit even with no heartbeats"
     out("A1", f"SF{sf}: {t * 1000:.1f} ms per {PAYLOAD}-byte uplink; {per_day:.1f} s/day at {ups:.0f} uplinks; "
               f"within {TTN_S:.0f} s: {hb_txt}; at most {max_changes:.0f} uplinks a day")
+US915_MAX_SF10 = 11      # bytes, largest application payload at the slowest US915 125 kHz rate (SF10)
+PAYLOAD_US = 11          # bytes, packed payload if the band is US915 (DDR-002 firmware rule)
+out("A2", f"US915 rule: payload packed to {PAYLOAD_US} bytes (limit {US915_MAX_SF10} at SF10): {toa(10, PAYLOAD_US + OVERHEAD) * 1000:.1f} ms at SF10; "
+          f"the band is still open (O1), so EU868 figures with {PAYLOAD} bytes are used below")
 res("R5", f"{air[7][1]:.1f} s/day at SF7, {air[8][1]:.1f} at SF8, {air[9][1]:.1f} at SF9, {air[10][1]:.1f} at SF10, "
           f"{air[12][1]:.1f} at SF12 ({ups:.0f} uplinks)", "30 s/day or less", "At risk (met at SF7 to SF9; not met at SF10 to SF12)")
 
@@ -197,8 +202,11 @@ for sf in (9, 12):
               f"NLOS range {rng[0]:.0f} m (no fade margin), {rng[1]:.0f} m ({FADE:.0f} dB fade margin)")
     if sf == 9:
         link9 = (budget, m_n, m_l, rng)
-res("R4", f"SF9 margin at 1 km with a van over: {link9[1]:.1f} dB NLOS, {link9[2]:.1f} dB LOS; NLOS range {link9[3][1]:.0f} m with 10 dB fade margin",
-    "1 km in a street canyon with a van parked over the puck", "Not met")
+out("D3", f"R4 as restated (DDR-002): gateway within {R4_REQ_M:.0f} m; SF9 NLOS range with a van over and a {FADE:.0f} dB fade margin "
+          f"{link9[3][1]:.0f} m, {link9[3][1] / R4_REQ_M:.2f} x the distance")
+res("R4", f"SF9 NLOS range {link9[3][1]:.0f} m with a van over and 10 dB fade margin; margin at 1 km {link9[1]:.1f} dB NLOS, {link9[2]:.1f} dB LOS",
+    f"Gateway within {R4_REQ_M:.0f} m in a street canyon with a van parked over the puck",
+    "Met on paper" if link9[3][1] >= R4_REQ_M else "Not met")
 
 # =============================================================== E. Detection (R1), line-dipole model
 MU0_4PI = 1.0   # absorbed into the calibration
@@ -263,7 +271,8 @@ out("F4", f"parked within the bay lines, the nearest tire edge stays {inner_van 
           f"from the puck axis, against a {P['base_r']:.0f} mm puck radius: parked wheels straddle the puck; only maneuvering wheels cross it")
 res("R6", f"crown {s_crown:.1f} MPa static, factor {SIG_PU / s_crown:.1f} on PU and {SIG_POT / s_crown:.1f} on potting; "
           f"bond shear {tau:.2f} MPa, factor {TAU_BOND['20 C'] / tau:.2f} at 20 C, {TAU_BOND['50 C'] / tau:.2f} at 50 C",
-    "50 kN static wheel load and repeated drive-overs without cracking or debonding", "At risk (debond under braking)")
+    "49 kN wheel (64 kN dynamic) crossing the puck while maneuvering, no cracking or debonding; parked wheels straddle it",
+    "At risk (debond under braking; epoxy bond)")
 
 # =============================================================== G. Size, mass (R7)
 vol = volumes(build_parts())
@@ -293,8 +302,9 @@ out("H4", f"digit {digit:.0f} mm on a {PANEL_H_MM} mm panel; legibility index {L
 t_dl = toa(9, DL_PAYLOAD + OVERHEAD)
 out("H5", f"downlinks: {SIGN_CHANGES}/day against TTN's {TTN_DL}/day; on a private gateway {SIGN_CHANGES} x {t_dl * 1000:.0f} ms "
           f"= {SIGN_CHANGES * t_dl:.0f} s/day at SF9 in RX2, {SIGN_CHANGES * t_dl / 86400 / 0.10:.2%} of the 10 % sub-band allowance")
-res("R11", f"about {dist:.0f} m by day at full contrast ({digit:.0f} mm digits); unlit at night", "25 m by day and night", "Not met (night)")
-res("R12", f"{drawn:.2f} Wh/day drawn ({avg_mw:.1f} mW) against 2.40 to 2.76 Wh/day", "Within the host FieldNode allowance",
+res("R11", f"about {dist:.0f} m by day at full contrast ({digit:.0f} mm digits); unlit at night, as restated", f"{LEGIBLE_REQ:.0f} m by day (daylight only, DDR-002)",
+    "Met on paper" if dist >= LEGIBLE_REQ else "Not met")
+res("R12", f"{drawn:.2f} Wh/day drawn ({avg_mw:.1f} mW) against 2.40 Wh/day (100 mW)", "Within the host FieldNode allowance",
     "Met on paper (private network only: 200 downlinks/day)")
 
 # =============================================================== I. Cost (R13)

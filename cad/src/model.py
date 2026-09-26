@@ -15,8 +15,8 @@ from pathlib import Path
 
 # Top-level parameters (mm). Edit these, not the geometry below.
 PARAMS = {
-    # Puck (LDZ-PRC-001 v0.3, R7): surface-bonded cast polyurethane dome over potted electronics
-    "pad_r": 85.0, "pad_t": 3.0,            # bitumen pad or road-marker epoxy bed
+    # Puck (LDZ-PRC-001 v0.4, R7): surface-bonded cast polyurethane dome over potted electronics
+    "pad_r": 85.0, "pad_t": 3.0,            # two-part road-marker epoxy bed (LDZ-DDR-002)
     "base_r": 75.0, "base_t": 6.0,          # flat base disc (150 mm diameter)
     "dome_h": 22.0, "dome_top_r": 52.0,     # frustum dome above the base
     "wall": 4.0,                            # cast dome wall; the cavity is fully potted

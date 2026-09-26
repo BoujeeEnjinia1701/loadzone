@@ -74,7 +74,7 @@ parts = [
     Part("Internal antenna, flexible PCB", P["ant"], "#111827", 4),
     Part("Primary cells, 2 x AA Li-SOCl2, with pulse capacitor", P["cells"], "#C2410C", 5),
     Part("Puck base and potting", P["base"], "#6B7280", 6),
-    Part("Road adhesive pad", P["pad"], "#1F2937", 7),
+    Part("Road-marker epoxy bed", P["pad"], "#1F2937", 7),
     Part("Sign face with legend (option)", sign_panel, "#1D4ED8", 8),
     Part("E-paper display in window housing (option)", epaper, "#E5E7EB", 9),
     Part("Sign pole clamps (option)", clamps, "#94A3B8", 10),
@@ -119,7 +119,7 @@ def media():
     key = ["One puck per 7 m vehicle slot; puck 150 mm dia, 31 mm high",
            "Report in 18 s typical, 39 s worst at SF9 (LDZ-CAL-001)",
            "Cell life 7.7 years at SF9 on 2 x AA Li-SOCl2 (derated 40 %)",
-           "Link from under a van: about 350 m in a street canyon, not 1 km",
+           "Gateway within 300 m of the bay; 350 m reach from under a van",
            "Two-puck kit $114; sign option $97 plus a $126 FieldNode"]
     render_all(parts, project="LoadZone", title="Loading bay occupancy sensor concept", dwg_no="LDZ-DWG-010",
                key_figures=key, date="2026-09-25", cut=False, context=context,

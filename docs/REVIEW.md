@@ -124,3 +124,54 @@ Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for 
 ### Recommended next step
 
 TRL 4 is on hold by Amish's instruction; this repo stops at TRL 3. Amish's review is needed on D1 to D8 and O1 to O7. For the record only, TRL 4 would need: a bench build of one puck; a lab test report (TST, `environment: lab`) covering magnetometer readings under parked vehicles, sleep current and charge per uplink, a crush test of the cast and potted puck, a pull-off and shear test of the bond on asphalt at 20 and 50 °C, and immersion sealing; and build log entries. None of this has been started.
+
+## Session 2026-09-25: recommendations accepted
+
+On 2026-09-25 Amish wrote: "i accept all your recommendations, go with them across all repos." Every item with a recommendation is now **Decided by Amish, 2026-09-25: go with recommendation**, recorded in `docs/decisions/0002-recommendations-accepted.md` (LDZ-DDR-002 v0.1). Nothing past TRL 3 was done.
+
+### Decisions applied and what changed
+
+| Item | Decision | Before | After |
+| --- | --- | --- | --- |
+| D1 to D8 | As recommended in LDZ-DDR-001 | "Adopted as recommended for TRL 3, open for his review" | Decided; LDZ-DDR-001 v0.2 |
+| D6 budget | Sign outside the budget; budget covers the two-puck kit | `budget_usd` $120 | $120 (unchanged; scope already redefined in R13); kit $114.00 |
+| O2 R4 | Gateway within 300 m of the bay | 1 km target; -6.0 dB margin; not met | 300 m target; 353 m range at SF9 with 10 dB fade margin; met on paper |
+| O3 R6 | Two-part road-marker epoxy; R6 restated around maneuvering wheels | Bitumen pad or epoxy; parked-wheel finding not in R6 | Epoxy bed (BOM line 7, $4.00 unchanged); R6 restated; bond factor 0.66 unchanged, still at risk |
+| O4 R11 | Daylight-only legibility | 25 m by day and night; not met | 25 m by day; about 28 m; met on paper |
+| O5 Sign network | Private network server (TwinKit) or a permissive city network | Proposed | Decided constraint in precis and problem statement |
+| O6 Engineering proposals | Diode per cell, 85 °C pulse capacitor, full potting, 6 mm crown radius | Awaiting confirmation | Confirmed; no geometry or cost change |
+| O7 Payload | 11 bytes if the band is US915 | Proposed | Decided firmware rule; [A2] 370.7 ms at SF10; firmware itself on hold (TRL 4) |
+
+Also updated to match FieldNode's published figure (FND-DDR-002): the sign's 17.7 mW is now checked against 100 mW only (was 115 mW and 100 mW).
+
+Files changed: LDZ-PRB-001 v0.4, LDZ-PRC-001 v0.4, LDZ-REQ-001 v0.4, LDZ-CAL-001 v0.2 (`docs/04-calcs/sizing.py` and `results.csv` re-run), LDZ-DDR-001 v0.2, new LDZ-DDR-002 v0.1; `bom/bom.csv` and `bom/bom-notes.md`; `cad/src/model.py` (comment only; STEP and STL re-exported); `cad/src/sheets.py` and LDZ-DWG-001 at Rev P2 (material note and two notes; geometry unchanged); `cad/src/concept_media.py` (blueprint key figure and exploded-view label; all of `media/` re-rendered and checked); `README.md` (key figures, components, "What sparked the idea"); `project.yaml` (evidence list); all PDFs in `docs/pdf/` rebuilt. Pitch and problem unchanged; no rewording was recommended.
+
+### Requirement status (LDZ-CAL-001 v0.2)
+
+None not met (was 2), 3 at risk, 1 not verifiable at TRL 3, 7 met on paper (was 5), 4 met by design.
+
+| ID | Status | Key number |
+| --- | --- | --- |
+| R1 Detection | At risk | Weak-steel truck 3.85 µT against a 3 µT threshold; calibration assumed |
+| R5 Airtime | At risk | 25.5 s/day at SF9; 51.0 s at SF10 |
+| R6 Traffic | At risk | Epoxy bond shear 1.51 MPa against about 1.0 MPa assumed (factor 0.66) |
+| R14 Install time | Not verifiable at TRL 3 | Needs an install trial |
+| R2, R3, R4, R7, R11, R12, R13 | Met on paper | 38.6 s worst; 7.7 years; 353 m against 300 m; 31 mm; about 28 m by day; 17.7 mW against 100 mW; $114.00 |
+| R8, R9, R10, R15 | Met by design | Unchanged |
+
+### Still awaiting Amish
+
+1. **O1, first trial partner and LoRaWAN band.** No recommendation was made. Proposed, awaiting Amish. The US915 payload rule (O7) applies only if that band is chosen.
+
+### Cross-repo actions (other repos not edited)
+
+- **TwinKit:** its network stack must support LoRaWAN class C downlinks, about 200 a day for each LoadZone sign (O5). TwinKit's review does not yet mention class C.
+- **FieldNode:** none required. LoadZone now uses FieldNode's published 100 mW allowance and $126.00 core cost, and a 12-byte (or 11-byte in US915) payload, shorter than FieldNode's 20-byte reading.
+
+### README and inspiration
+
+"What sparked the idea" now traces the design to San Francisco's SFpark pilot and the SFMTA Parking Sensor Data Guide (2013), which records in-ground magnetometer sensors whose batteries, meant to last about five years, began failing about a year early; the earlier text about a September 2026 review of research areas was removed. No other file attributed the idea to a review.
+
+### TRL 4
+
+TRL 4 remains on hold by Amish's instruction. The bond pull-off and shear test on asphalt, a field link survey, a magnetometer log under parked vehicles and the payload firmware are decided or recommended but not started.

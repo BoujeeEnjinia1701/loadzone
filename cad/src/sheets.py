@@ -1,4 +1,4 @@
-"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P1).
+"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P2).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/LDZ-DWG-001.svg, .pdf and .png from the parametric model.
@@ -20,9 +20,10 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="LoadZone", title="General arrangement, bay sensor puck", dwg_no="LDZ-DWG-001",
-          rev="P1", author="Amish Chadha", date="2026-09-25", concept=True,
-          material="Dome rigid cast PU, yellow; PU potting; ASA base; bitumen or epoxy pad. See bom/bom.csv",
-          revisions=[("P1", "Preliminary GA from LDZ-CAL-001 v0.1", "2026-09-25", "AC")])
+          rev="P2", author="Amish Chadha", date="2026-09-25", concept=True,
+          material="Dome rigid cast PU, yellow; PU potting; ASA base; two-part road-marker epoxy bed. See bom/bom.csv",
+          revisions=[("P1", "Preliminary GA from LDZ-CAL-001 v0.1", "2026-09-25", "AC"),
+                     ("P2", "Epoxy bed; notes per LDZ-DDR-002", "2026-09-25", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 30, 140, 84, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [
@@ -34,7 +35,9 @@ s.add_notes("Key dimensions and interfaces (mm)", [
     "Antenna at the +X dome edge; no metal above it",
     f"Placement: slot center, {P['puck_from_curb'] / 1000:.1f} m from curb face,",
     f"  one puck per {P['slot_l'] / 1000:.0f} m slot, clear of bike lanes",
+    "Bond: two-part road-marker epoxy bed",
     "Crown 7.4 MPa at a 49 kN wheel (LDZ-CAL-001 F)",
+    "Gateway within 300 m of the bay (R4)",
     "Mass about 0.45 kg without pad",
     "Road work only under permit and traffic control",
     "PRELIMINARY, NOT FOR FABRICATION",

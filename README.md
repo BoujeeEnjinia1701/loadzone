@@ -48,7 +48,7 @@ Pressure on the curb keeps rising. Online sales rose from 16 % to 19 % of all re
 
 ## What sparked the idea
 
-It came out of a September 2026 review of Design Molecule's applied research areas against the open projects already in the lab. The wider trigger is the move to manage curbs digitally: the Open Mobility Foundation's Curb Data Specification now defines how sensor events and occupancy metrics are shared ([Open Mobility Foundation](https://www.openmobilityfoundation.org/about-cds/)), and in 2024 a group of US cities began comparative curb research funded through US DOT SMART grants ([Urban Freight Lab](https://urbanfreightlab.com/research-projects/open-mobility-foundation-smart-grant-curb-collaborative/)). Those programs need affordable, inspectable sensors.
+The starting point was San Francisco's SFpark pilot, which set magnetometer "pucks" into metered parking spaces to publish real-time availability. The agency's own sensor data guide records where that approach fell short: the in-ground sensors, 4 in (about 100 mm) across, had batteries intended to last about five years, yet some began to fail in late 2012 and early 2013, about a year earlier than expected, and users were advised to aggregate the data by hour and by block to reduce the effect of sensor error ([SFMTA, Parking Sensor Data Guide, 2013](https://www.sfmta.com/sites/default/files/reports-and-documents/2018/08/sfpark_dataguide_parkingsensordata.pdf)). LoadZone takes the same sensing principle to the loading bay, where stops last minutes rather than hours, and answers those lessons in the open: a surface-bonded puck that needs no coring, a cell budget derated 40 % against the five-year target, and firmware and data that a city can inspect rather than rent.
 
 ## Problem
 
@@ -62,14 +62,14 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
-- Surface-bonded bay sensor puck, 150 mm diameter and 31 mm high, cast polyurethane over potted electronics, one per vehicle slot of about 7 m
+- Surface-bonded bay sensor puck on a two-part road-marker epoxy bed, 150 mm diameter and 31 mm high, cast polyurethane over potted electronics, one per vehicle slot of about 7 m
 - 3-axis magnetometer (LIS2MDL class) for vehicle detection
 - FieldNode radio core (STM32WL-class LoRaWAN module) with an internal antenna
 - Two AA-size lithium thionyl chloride cells, 7.7 years of life at SF9 (calculated, derated 40 %)
 - Open server and data feed that maps onto the Curb Data Specification
-- Solar signage option: 7.5 in e-paper sign on an existing pole, powered by a host FieldNode
+- Solar signage option: 7.5 in e-paper sign on an existing pole, powered by a host FieldNode, legible by day; needs a private network server such as TwinKit
 
-TRL 3 calculations ([LDZ-CAL-001](docs/04-calcs/01-sizing.md)): state reported in 17.7 s typically and 38.6 s at worst, 7.7 years on one set of cells, and $114.00 in parts for a two-slot bay against the $120 budget; the sign option ($97.00 plus a $126.00 FieldNode) is costed separately. Two requirements are not met: a puck under a parked van reaches a gateway about 350 m away in a street canyon, not 1 km (R4), and the e-paper sign is unlit at night (R11). Detection of high-clearance trucks (R1), airtime at slow data rates (R5) and the road bond under braking (R6) are at risk. See the [design precis](docs/02-concept.md), [requirements](docs/03-requirements.md) and [design decisions](docs/decisions/0001-trl2-review-decisions.md). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
+TRL 3 calculations ([LDZ-CAL-001](docs/04-calcs/01-sizing.md)): state reported in 17.7 s typically and 38.6 s at worst, 7.7 years on one set of cells, and $114.00 in parts for a two-slot bay against the $120 budget; the sign option ($97.00 plus a $126.00 FieldNode) is costed separately. No requirement is now not met. A puck under a parked van reaches a gateway about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4), and the e-paper sign is a daylight-only aid, unlit at night (R11). Detection of high-clearance trucks (R1), airtime at slow data rates (R5) and the epoxy road bond under braking (R6) are at risk. See the [design precis](docs/02-concept.md), [requirements](docs/03-requirements.md) and design decisions ([LDZ-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [LDZ-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
@@ -102,4 +102,4 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 - **Hardware** (CAD, drawings, BOM, electronics): [CERN-OHL-S v2](LICENSE)
 - **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE)
 
-A project of the [Design Molecule](https://designmolecule.com) lab. Smart cities set.
+A project of the [Design Molecule](https://designmolecule.com) lab.
