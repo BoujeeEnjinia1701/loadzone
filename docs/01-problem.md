@@ -3,7 +3,7 @@ doc_id: LDZ-PRB-001
 title: LoadZone problem statement
 project: LoadZone
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (users, context, constraints, prior work, out of scope)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Reflect LDZ-DDR-001 (budget scope, installation, network) and the gateway distance found in LDZ-CAL-001
 ---
 
 # LoadZone problem statement
@@ -41,7 +45,7 @@ Demand keeps growing. Online sales rose from 16 % to 19 % of all retail sales in
 | Shops and business districts | Shared loading space that works for their suppliers; evidence to request more bays |
 | Cyclists and pedestrians | Fewer vans stopped in bike lanes and at crossings |
 
-The setting is an on-street loading bay along a curb, typically long enough for one to three vans, on a street with shops, offices or homes. The street may already have poles (lighting or signs) that a city allows sensors to be fixed to. A LoRaWAN gateway may exist within a kilometer (a city network, The Things Network or the lab's TwinKit gateway), or one must be added.
+The setting is an on-street loading bay along a curb, typically long enough for one to three vans, on a street with shops, offices or homes. The street may already have poles (lighting or signs) that a city allows sensors to be fixed to. A LoRaWAN gateway may already exist nearby (a city network, The Things Network or the lab's TwinKit gateway), or one must be added. From road level under a parked van a puck reaches only about 350 m in a street canyon (LDZ-CAL-001), so a gateway within about 300 m of the bay is likely to be needed.
 
 ## Prior work
 
@@ -55,12 +59,13 @@ What is missing is an open, inspectable bay sensor that a small city or a commun
 
 ## Constraints
 
-- Garage-buildable prototype, about $120 USD for a two-slot bay (two pucks); the optional sign is costed separately.
+- Garage-buildable prototype, $120 USD or less for a two-slot bay (two pucks). The optional sign and its host FieldNode are costed separately and are outside this budget (LDZ-DDR-001, D6, adopted for TRL 3 pending Amish's review).
 - No cameras or microphones; the device may report only slot state (free or occupied), timestamps and device health.
 - No cutting or coring of the road for the prototype; the puck is bonded to the surface and removable.
 - Installation only with the road authority's permit, by a trained crew under traffic management.
 - Battery powered for at least five years; no wiring in the road.
 - Uses the FieldNode radio core so firmware and tools are shared across the lab.
+- The sign option needs a private network server (such as TwinKit) or a city network that allows about 200 downlinks a day; The Things Network allows 10 per device ([TTN](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle/)).
 - Must survive being driven over by loaded delivery trucks, road salt, water, oil and summer road temperatures.
 
 ## Out of scope

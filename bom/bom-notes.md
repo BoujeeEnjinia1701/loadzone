@@ -1,8 +1,11 @@
 # BOM notes
 
-Costs are indicative USD prices at quantity 1, for review; suppliers are not yet selected.
+Costs are indicative USD prices at quantity 1 for a concept estimate, not quotes. Every line is priced, with a supplier or supplier type. Totals are checked by `docs/04-calcs/sizing.py` (LDZ-CAL-001, section 10).
 
-- Items 1 to 7 and 12 are the core kit for a two-slot bay (two pucks): about $110, within the $120 prototype budget.
-- Items 8 to 10 are the sign option: about $97. Item 11, the host FieldNode, is costed in the FieldNode repo (about $126) and is not included here. With the sign option and its FieldNode the bay costs about $333, above the budget; the option is proposed, awaiting Amish.
+- Items 1 to 7 (per puck, quantity 2) and item 12 are the two-slot bay kit: $114.00 against the $120 `budget_usd`, a margin of $6.00. One puck costs $54.00.
+- Under LDZ-DDR-001 D6 (adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review) the budget covers the two-puck kit only.
+- Items 8 to 10 are the sign option: $97.00, outside the budget.
+- Item 11, the host FieldNode, is priced once in the FieldNode BOM ($126.00, FND-CAL-001) and shown here for reference; it is outside the LoadZone budget. A bay with the sign costs $337.00.
+- Item 5 changed at TRL 3 ($12.00 to $14.00): one Schottky diode per cell and an 85 °C hybrid pulse capacitor (LDZ-CAL-001, section 3). This is an engineering proposal awaiting Amish's confirmation (LDZ-DDR-001, O6).
 - Line numbers match the callouts in `media/exploded.png`.
-- A LoRaWAN gateway (TwinKit or an existing network) is not included.
+- A LoRaWAN gateway (TwinKit or an existing network) is not included. The sign option needs a private network server for its downlinks.

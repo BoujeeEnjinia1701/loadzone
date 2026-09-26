@@ -1,18 +1,18 @@
 # LoadZone
 
-![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Smart Cities · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $120 USD · **Difficulty:** 2 of 5
+**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $120 USD · **Difficulty:** 2 of 5
 
 A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
 
 ![LoadZone concept](media/hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/LDZ-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
-Knowing bay availability reduces circling and double parking. LoadZone puts a low, battery-powered puck in the middle of each vehicle slot of a loading bay. A magnetometer senses the steel body of a parked vehicle, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" within about 20 s. A server turns these reports into live bay state for drivers, and occupancy and dwell times for the city; a solar e-paper sign on an existing pole is an option.
+Knowing bay availability reduces circling and double parking. LoadZone puts a low, battery-powered puck in the middle of each vehicle slot of a loading bay. A magnetometer senses the steel body of a parked vehicle, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" in about 18 s (39 s at worst). A server turns these reports into live bay state for drivers, and occupancy and dwell times for the city; a solar e-paper sign on an existing pole is an option.
 
 It is open and garage-buildable because curb data should belong to the street, not to a vendor. A magnetometer cannot see faces or number plates, so privacy holds even if the firmware is changed, and anyone can inspect how a "free" or "occupied" call is made. The puck is a cast dome over potted off-the-shelf parts, bonded to the road like a raised pavement marker, and the data can be published in the open Curb Data Specification format so cities can compare it with carrier data.
 
@@ -62,14 +62,14 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
-- Surface-bonded bay sensor puck, 150 mm diameter and 31 mm high, one per vehicle slot of about 7 m
+- Surface-bonded bay sensor puck, 150 mm diameter and 31 mm high, cast polyurethane over potted electronics, one per vehicle slot of about 7 m
 - 3-axis magnetometer (LIS2MDL class) for vehicle detection
 - FieldNode radio core (STM32WL-class LoRaWAN module) with an internal antenna
-- Two AA-size lithium thionyl chloride cells, about 7 years of life (estimate)
+- Two AA-size lithium thionyl chloride cells, 7.7 years of life at SF9 (calculated, derated 40 %)
 - Open server and data feed that maps onto the Curb Data Specification
 - Solar signage option: 7.5 in e-paper sign on an existing pole, powered by a host FieldNode
 
-First-order estimates (to be checked at TRL 3): state reported within about 20 s, about 7 years on one set of cells, and about $110 in parts for a two-slot bay. Requirements not yet met include traffic load survival with a printed housing, sign legibility at 25 m and night, and the budget if the sign option is added. See the [design precis](docs/02-concept.md) and [requirements](docs/03-requirements.md).
+TRL 3 calculations ([LDZ-CAL-001](docs/04-calcs/01-sizing.md)): state reported in 17.7 s typically and 38.6 s at worst, 7.7 years on one set of cells, and $114.00 in parts for a two-slot bay against the $120 budget; the sign option ($97.00 plus a $126.00 FieldNode) is costed separately. Two requirements are not met: a puck under a parked van reaches a gateway about 350 m away in a street canyon, not 1 km (R4), and the e-paper sign is unlit at night (R11). Detection of high-clearance trucks (R1), airtime at slow data rates (R5) and the road bond under braking (R6) are at risk. See the [design precis](docs/02-concept.md), [requirements](docs/03-requirements.md) and [design decisions](docs/decisions/0001-trl2-review-decisions.md). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 

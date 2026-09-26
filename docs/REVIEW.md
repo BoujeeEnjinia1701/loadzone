@@ -54,3 +54,73 @@
 Review this note and the media. If approved, run `/advance-trl3` to check by calculation the power budget, airtime, link budget from under a vehicle, the housing load case and sign legibility, then produce the parametric puck model with STEP export and a drawing sheet. A short field log of magnetometer readings under parked vans would reduce the R1 risk most, but that is TRL 4 work and has not been started.
 
 Suggestion (not in the repo): CurbCount and LoadZone could share one server and data feed through CityTwin.
+
+## Session 2026-09-25: TRL 3
+
+On 2026-09-25 Amish asked for this batch of repos to be taken through the usual process with the instruction "you know the drill, nothing gets past TRL 3". He has not reviewed this repo's TRL 2 items one by one, so every item that carried a recommendation is adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review. This session ran `/advance-trl3` on that basis and stopped at TRL 3.
+
+### What was done
+
+- `docs/decisions/0001-trl2-review-decisions.md` (LDZ-DDR-001 v0.1, status proposed): eight items adopted as recommended for TRL 3, open for Amish's review (D1 to D8); O1 left open; six new items raised (O2 to O7).
+- `docs/04-calcs/01-sizing.md` (LDZ-CAL-001 v0.1) and `docs/04-calcs/sizing.py`: airtime, energy and cell life, pulse supply, latency, link from road level, detection, loads and bond, size and mass, sign power, legibility and downlinks, and cost, with a status for every requirement. The script imports the model, reads the BOM and `project.yaml`, prints every quoted number with a tag and writes `docs/04-calcs/results.csv`.
+- `cad/src/model.py`: parametric build123d puck (pad, base, filleted dome, potting, two cells, pulse capacitor, carrier with module, magnetometer, antenna) and sign option (face, display housing, band clamps). Exports `cad/step/` and `cad/stl/` for `loadzone-puck`, `loadzone-dome` and `loadzone-sign-option`.
+- `cad/src/sheets.py` and `cad/drawings/LDZ-DWG-001.svg`, `.pdf`, `.png`: general arrangement of the puck at Rev P1, 1:2, marked "CONCEPT, NOT FOR FABRICATION" and "PRELIMINARY, NOT FOR FABRICATION". LDZ-DWG-001 was free because the concept blueprint is LDZ-DWG-010.
+- `bom/bom.csv` (12 lines, all priced with a supplier or supplier type; item 11 now carries FieldNode's $126.00 for reference) and `bom/bom-notes.md`.
+- `cad/src/concept_media.py` now builds the puck and sign from the model; all of `media/` was re-rendered and every image checked. The cutaway caption was corrected because the potting now hides the magnetometer. No `media/_views*` folders remain.
+- LDZ-PRB-001, LDZ-PRC-001 and LDZ-REQ-001 revised to v0.3; `README.md` (TRL badge and line, links, key figures, components) and `project.yaml` (`trl: 3`, `trl_target: 3`, evidence list) updated. PDFs rebuilt in `docs/pdf/`.
+
+### Requirement status (LDZ-CAL-001, Table 2)
+
+2 not met, 3 at risk, 1 not verifiable at TRL 3, 5 met on paper, 4 met by design.
+
+| ID | Status | Key number |
+| --- | --- | --- |
+| R4 Link from road level | **Not met** | -6.0 dB at 1 km out of sight at SF9 with a van over; about 350 m with a 10 dB fade margin |
+| R11 Sign legibility | **Not met** (night) | About 28 m by day at full contrast (TRL 2 said 10 m); unlit at night; a 0.5 W light needs 2.5 times FieldNode's 100 mW allowance |
+| R1 Detection | At risk | Line-dipole model: van 10.0 µT, weak-steel truck 3.85 µT, next lane 0.46 µT against 3 µT; calibration assumed |
+| R5 Airtime | At risk | 25.5 s/day at SF9 (TRL 2 said 31 s); 51.0 s at SF10 |
+| R6 Traffic | At risk | Crown 7.4 MPa, factor 5.4 on PU, 2.0 on potting; bond shear 1.51 MPa against about 1.0 MPa assumed |
+| R14 Install time | Not verifiable at TRL 3 | Needs an install trial |
+| R2, R3, R7, R12, R13 | Met on paper | 38.6 s worst latency at SF9; 7.7 years; 31 mm high; 0.42 Wh/day sign; $114.00 |
+| R8, R9, R10, R15 | Met by design | CDS event types checked against the specification |
+
+Other corrections to TRL 2 figures: puck mass 451 g (was 0.35 kg) because the cavity is fully potted; kit cost $114.00 (was about $110) with the diodes and 85 °C capacitor.
+
+### Decisions recorded (LDZ-DDR-001)
+
+Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: D1 surface-bonded puck; D2 magnetometer only; D3 one puck per 7 m slot; D4 two AA-size Li-SOCl2 cells; D5 cast polyurethane dome over fully potted electronics; D6 sign outside the $120 budget, which now covers the two-puck kit only (R13 redefined; `budget_usd` unchanged); D7 LoRaWAN class C downlink to the sign; D8 a feed that maps onto the Curb Data Specification. No reworded pitch or problem was recommended, so `project.yaml` and `README.md` keep the existing wording.
+
+### Still awaiting Amish
+
+1. **O1, first trial partner and LoRaWAN band.** No preference stated. Proposed, awaiting Amish.
+2. **O2, R4.** Recommendation: restate R4 as a gateway within 300 m of the bay. Not applied.
+3. **O3, R6 bond.** Recommendation: two-part road-marker epoxy, and restate R6 with the finding that parked wheels straddle the puck. Not applied.
+4. **O4, R11.** Recommendation: a daylight-only legibility target. Not applied.
+5. **O5, sign network.** About 200 downlinks a day against The Things Network's 10: the sign needs TwinKit or another private network server.
+6. **O6, engineering proposals:** a Schottky diode per cell, an 85 °C hybrid pulse capacitor, the fully potted cavity and a 6 mm crown radius. In the model and BOM, awaiting confirmation.
+7. **O7, payload.** Pack the payload into 11 bytes if the band is US915.
+
+### Cross-repo consistency
+
+- FieldNode (TRL 3): LoadZone uses its radio currents, SF9 sensitivity and $126.00 core cost, and its adopted choices (LoRaWAN, STM32WL-class module, TwinKit first). The sign's 17.7 mW fits both the published 115 mW allowance and the 100 mW FieldNode proposes. No conflict.
+- TwinKit (TRL 3): its airtime figures use a 20-byte reading; LoadZone's 12-byte uplink is shorter. TwinKit's review does not mention class C downlinks; the sign's 200 downlinks a day use 0.38 % of the RX2 sub-band allowance, but TwinKit's network stack must support class C. Noted here; TwinKit not edited.
+- CalRig: could check magnetometer offset and noise before installation; no interface assumed. CellGuard, MotionCore and ThermaCart are not used.
+
+### Safety concerns
+
+- Road installation: permit, trained crew and traffic management; a loose puck can be thrown by a tire, and the calculated bond margin under braking is below 1 on the upper bound, so bond checks after install matter.
+- Primary Li-SOCl2 cells in a hot road: parallel cells only through a diode each, fused, never recharged; the pulse capacitor must be rated for 85 °C; spent cells are hazardous waste.
+- Polyurethane resins (isocyanates) and road adhesives: ventilation and protective equipment.
+- Sign option: work at height near possible overhead lines; pole owner's consent for wind load.
+
+### Gaps and notes
+
+- Citations: none were flagged as unchecked at TRL 2. The Things Network fair-use figures (30 s uplink, 10 downlinks a day) and the Curb Data Specification event types were checked by WebFetch on 2026-09-25. The MUTCD legibility index (section 2A.13) and 3GPP TR 38.901 are cited by section, not fetched.
+- Assumptions only tests can settle: the 10 µT vehicle signal, the 10 dB road-level and 10 to 20 dB vehicle losses, adhesive-to-asphalt strength, and material strengths.
+- The UMi path-loss model is used below its 1.5 m height floor; the road-level loss term covers this.
+- The kit's cutaway cuts at the mean Y of the parts; the puck (at Y = -1.3 m) is passed alone with a slab of road, as at TRL 2, and the section shows the cells, board and antenna. The magnetometer falls behind the cut and appears only in the exploded view. The concept blueprint's orthographic views are small because the street context sets the scale; the GA sheet shows the puck at 1:2.
+- Existing material beyond TRL 3: `build-log/README.md` (scaffold) and empty `electronics/` and `firmware/` placeholders are present, untouched and not extended. No test, build or firmware material was created.
+
+### Recommended next step
+
+TRL 4 is on hold by Amish's instruction; this repo stops at TRL 3. Amish's review is needed on D1 to D8 and O1 to O7. For the record only, TRL 4 would need: a bench build of one puck; a lab test report (TST, `environment: lab`) covering magnetometer readings under parked vehicles, sleep current and charge per uplink, a crush test of the cast and potted puck, a pull-off and shear test of the bond on asphalt at 20 and 50 °C, and immersion sealing; and build log entries. None of this has been started.

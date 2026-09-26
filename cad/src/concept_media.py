@@ -1,4 +1,4 @@
-"""LoadZone concept massing model and media (TRL 2).
+"""LoadZone concept media (TRL 3), built from the parametric model in cad/src/model.py.
 
 Run from the repo root:  python cad/src/concept_media.py
 Proportions and main parts only; not for fabrication.
@@ -19,62 +19,44 @@ sys.path.insert(0, str(ROOT / ".kit"))
 import os
 os.chdir(ROOT)
 
-from build123d import Box, Cylinder, Cone, Pos, Rot
+from build123d import Box, Cylinder, Pos, Rot
 import concept
 from concept import Part, render_all, cutaway_parts
 
-# ---------------- key dimensions (mm) ----------------
-PUCK_R = 75.0          # puck outer radius at the base (150 mm diameter)
-PAD_T = 3.0            # bitumen adhesive pad
-BASE_T = 6.0           # base floor
-DOME_H = 22.0          # dome height above the base
-DOME_TOP_R = 52.0      # dome top radius
-WALL = 4.0
-SLOT = 7000.0          # one vehicle slot, estimate
+sys.path.insert(0, str(ROOT / "cad/src"))
+from model import PARAMS as MP, build_parts, build_sign  # noqa: E402
+
+# ---------------- key dimensions (mm), from cad/src/model.py ----------------
+PUCK_R = MP["base_r"]
+SLOT = MP["slot_l"]
 CURB_H = 150.0
 
-PX, PY = 0.0, -1300.0  # free-slot puck, centered in the slot 1.3 m from the curb face
+PX, PY = 0.0, -MP["puck_from_curb"]   # free-slot puck, centered in the slot 1.3 m from the curb face
 POLE_X, POLE_Y = 1500.0, 450.0
-POLE_R = 38.0
+POLE_R = MP["pole_r"]
 
-# ---------------- bay sensor puck ----------------
+
+# ---------------- bay sensor puck (parametric model) ----------------
 def puck(px, py, k=1.0):
-    """Puck parts centered at (px, py) on the road; k scales the puck (k > 1 only for the exploded view)."""
-    L = lambda x, y, z: Pos(px + x * k, py + y * k, z * k)
-    C = lambda r, h: Cylinder(r * k, h * k)
-    B = lambda x, y, z: Box(x * k, y * k, z * k)
-    z0 = PAD_T
-    pad = L(0, 0, PAD_T / 2) * C(PUCK_R + 10, PAD_T)
-    base = L(0, 0, z0 + BASE_T / 2) * C(PUCK_R, BASE_T)
-    zb = z0 + BASE_T
-    outer = L(0, 0, zb + DOME_H / 2) * Cone(PUCK_R * k, DOME_TOP_R * k, DOME_H * k)
-    inner = L(0, 0, zb + (DOME_H - WALL) / 2 - 0.01) * Cone((PUCK_R - WALL) * k, (DOME_TOP_R - WALL) * k,
-                                                             (DOME_H - WALL) * k)
-    dome = outer - inner
-    # two AA-size Li-SOCl2 cells (14.5 x 50 mm) lying along Y on the -X side; board on the +X side
-    cells = (L(-40, 0, zb + 1 + 7.25) * Rot(90, 0, 0) * C(7.25, 50)
-             + L(-23, 0, zb + 1 + 7.25) * Rot(90, 0, 0) * C(7.25, 50)
-             + L(-8, -15, zb + 7) * B(10, 10, 12))                      # pulse capacitor
-    board = L(20, 0, zb + 4) * B(36, 56, 1.6)
-    module = L(20, -12, zb + 6.3) * B(13, 16, 3)
-    mag = L(20, 14, zb + 6.3) * B(22, 18, 3)
-    ant = L(50, 0, zb + 7) * B(1.0, 50, 8)
-    return dict(pad=pad, base=base, dome=dome, cells=cells, board=board + module, mag=mag, ant=ant)
+    """Puck parts from model.py placed at (px, py) on the road; k scales the puck (k > 1 only for the exploded view)."""
+    m = build_parts()
+    def place(shape):
+        if k != 1.0:
+            shape = shape.scale(k)
+        return Pos(px, py, 0) * shape
+    return dict(pad=place(m["pad"]), base=place(m["base"] + m["potting"]), dome=place(m["dome"]),
+                cells=place(m["cells"] + m["cap"]), board=place(m["board"]), mag=place(m["mag"]), ant=place(m["ant"]))
 
 
 P = puck(PX, PY)
 
-# ---------------- sign option on an existing pole ----------------
-SIGN_Z0, SIGN_H, SIGN_W = 2100.0, 600.0, 450.0
-face_x = POLE_X + POLE_R + 30
-sign_panel = Pos(face_x + 1.5, POLE_Y, SIGN_Z0 + SIGN_H / 2) * Box(3, SIGN_W, SIGN_H)
-epaper = Pos(face_x + 3 + 12, POLE_Y, SIGN_Z0 + 200) * Box(24, 200, 140)
-clamps = None
-for zc in (SIGN_Z0 + 120, SIGN_Z0 + SIGN_H - 120):
-    ring = Pos(POLE_X, POLE_Y, zc) * (Cylinder(POLE_R + 5, 25) - Cylinder(POLE_R, 27))
-    arm = Pos((POLE_X + POLE_R + face_x) / 2, POLE_Y, zc) * Box(face_x - POLE_X - POLE_R + 4, 40, 25)
-    c = ring + arm
-    clamps = c if clamps is None else clamps + c
+# ---------------- sign option on an existing pole (parametric model) ----------------
+SIGN_Z0, SIGN_H, SIGN_W = MP["sign_z0"], MP["sign_h"], MP["sign_w"]
+_sg = build_sign()
+_at = Pos(POLE_X, POLE_Y, SIGN_Z0)
+sign_panel = _at * _sg["sign_face"]
+epaper = _at * _sg["display"]
+clamps = _at * _sg["clamps"]
 # Host FieldNode (enclosure, 6 W panel as hood, clamps), on the back of the pole above the sign
 FN_Z = 2950.0
 fn_box = Pos(POLE_X - POLE_R - 50, POLE_Y, FN_Z) * Box(90, 150, 200)
@@ -91,7 +73,7 @@ parts = [
     Part("Controller and LoRa radio (FieldNode core)", P["board"], KIT, 3),
     Part("Internal antenna, flexible PCB", P["ant"], "#111827", 4),
     Part("Primary cells, 2 x AA Li-SOCl2, with pulse capacitor", P["cells"], "#C2410C", 5),
-    Part("Puck base with potting", P["base"], "#6B7280", 6),
+    Part("Puck base and potting", P["base"], "#6B7280", 6),
     Part("Road adhesive pad", P["pad"], "#1F2937", 7),
     Part("Sign face with legend (option)", sign_panel, "#1D4ED8", 8),
     Part("E-paper display in window housing (option)", epaper, "#E5E7EB", 9),
@@ -134,11 +116,11 @@ context = [
 
 
 def media():
-    key = ["One puck per vehicle slot of about 7 m (estimate)",
-           "Puck 150 mm diameter, 31 mm high, bonded to the road",
-           "Magnetometer detection, LoRaWAN uplink on change and hourly",
-           "Cell life about 7 years on 2 x AA Li-SOCl2 (estimate)",
-           "Two-puck kit about $110; sign option about $97 plus FieldNode"]
+    key = ["One puck per 7 m vehicle slot; puck 150 mm dia, 31 mm high",
+           "Report in 18 s typical, 39 s worst at SF9 (LDZ-CAL-001)",
+           "Cell life 7.7 years at SF9 on 2 x AA Li-SOCl2 (derated 40 %)",
+           "Link from under a van: about 350 m in a street canyon, not 1 km",
+           "Two-puck kit $114; sign option $97 plus a $126 FieldNode"]
     render_all(parts, project="LoadZone", title="Loading bay occupancy sensor concept", dwg_no="LDZ-DWG-010",
                key_figures=key, date="2026-09-25", cut=False, context=context,
                flow={"title": "bay event flow, % of occupancy changes (estimates)", "unit": "%",
@@ -177,7 +159,7 @@ def media():
     puck_parts = [p for p in parts if p.bom is not None and p.bom <= 7] + [road_cut]
     concept._render(cutaway_parts(puck_parts, keep="+Y"), md / "cutaway.png", azim=-90, elev=22,
                     title="LoadZone: puck cutaway",
-                    note="Cells (orange) and radio board (teal) sit low under the dome; the magnetometer (violet) is on the board.")
+                    note="Potting (grey) fills the dome around the cells (orange), radio board (teal) and antenna; the magnetometer is behind the cut.")
     for d in md.glob("_views*"):
         import shutil
         shutil.rmtree(d, ignore_errors=True)
