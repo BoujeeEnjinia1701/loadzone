@@ -1,5 +1,13 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-In-ground or surface magnetometer sensor,,,,,,
-FieldNode radio core,,,,,,
-Solar signage option,,,,,,
-Dashboard,,,,,,
+1 Puck dome,2,"Cast polyurethane, high-visibility yellow, UV stabilized, 150 mm base diameter, 31 mm high; printed silicone mold",Resin supplier plus local make,5.00,make,Indicative material cost; housing material proposed awaiting Amish
+2 Magnetometer breakout,2,"3-axis 16-bit magnetometer, LIS2MDL class, I2C, on a small breakout",Electronics distributor,8.00,buy,Indicative price
+3 Controller and LoRa radio,2,"STM32WL-class LoRaWAN module (RAK3172 or Wio-E5 class) on a small carrier with 2 MB SPI flash; FieldNode core",Electronics distributor,14.00,buy,Indicative price; same module family as FieldNode
+4 Internal antenna,2,"Flexible PCB antenna, 868 or 915 MHz, adhesive backed, with u.FL lead",Electronics distributor,3.00,buy,Indicative price
+5 Cell set,2,"Two AA-size Li-SOCl2 bobbin cells (ER14505 class, about 2.6 Ah each) with pulse capacitor and inline fuse",Battery distributor,12.00,buy,Indicative price per set of two cells; buy from a reputable maker with a datasheet
+6 Puck base and potting,2,"Flat base disc, cast or printed ASA; two-part polyurethane potting compound; desiccant pocket",Resin supplier plus local make,6.00,make,Indicative material cost
+7 Road adhesive pad,2,"Bitumen adhesive pad or two-part road-marker epoxy for raised pavement markers",Road-marking supplier,4.00,buy,Indicative price
+8 Sign face (option),1,"Aluminium composite panel 450 x 600 x 3 mm with printed Loading zone legend and display cut-out",Local sign maker,22.00,buy,Indicative price; sign option proposed awaiting Amish
+9 E-paper display and housing (option),1,"7.5 in e-paper panel (800 x 480) with driver board; sealed housing with polycarbonate window and gland",Electronics distributor plus local make,65.00,buy,Indicative price; sign option proposed awaiting Amish
+10 Sign pole clamps (option),2,"Stainless band clamp with folded bracket for 60 to 90 mm poles",Hardware shop,5.00,buy,Indicative price; sign option proposed awaiting Amish
+11 Host FieldNode (option),1,"Standard FieldNode: 6 W panel, LiFePO4 cell, LoRaWAN class C, pole mount; see the FieldNode repo",FieldNode build,0.00,make,Costed in FieldNode (about $126); not in this total
+12 Hardware and consumables,1,"Wire, heat shrink, conformal coat, cable ties, cleaning solvent",Hardware shop,6.00,buy,Indicative price; no exploded-view callout
