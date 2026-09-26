@@ -175,3 +175,16 @@ None not met (was 2), 3 at risk, 1 not verifiable at TRL 3, 7 met on paper (was 
 ### TRL 4
 
 TRL 4 remains on hold by Amish's instruction. The bond pull-off and shear test on asphalt, a field link survey, a magnetometer log under parked vehicles and the payload firmware are decided or recommended but not started.
+
+## Session 2026-09-26: sources strengthened
+
+Sources in the README were checked against the standard of 2026-09-26 ("Fix the weaker sources"); every kept link was fetched and confirmed.
+
+| Where | Old source | New source |
+| --- | --- | --- |
+| Region table, European Union | gdpr-info.eu (unofficial reproduction of GDPR Article 25) | Regulation (EU) 2016/679, Article 25, on EUR-Lex |
+| Region table, India | None (uncited claim about few formal loading bays) | DPIIT, Guidelines for Preparing City Logistics Plan (row rewritten to what the guidelines say about loading lots and per-bay use data) |
+| Region table, Mexico and Brazil | None (uncited) | Row replaced by Brazil: CET São Paulo page listing 1,749 on-street truck loading bays |
+| What sparked the idea | SFMTA Parking Sensor Data Guide (kept) | Same source; wording corrected to note that noise-filtering software had cut the expected battery life to about three years before the early failures |
+
+No budget change in this session.

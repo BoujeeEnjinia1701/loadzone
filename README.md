@@ -41,14 +41,14 @@ Pressure on the curb keeps rising. Online sales rose from 16 % to 19 % of all re
 | --- | --- |
 | United States | In downtown Seattle, 41 % of commercial vehicles parked in unauthorized locations ([Urban Freight Lab, 2019](https://urbanfreightlab.com/publications/the-final-50-feet-of-the-urban-goods-delivery-system-tracking-curb-use-in-seattle/)); cities are now comparing curb programs through US DOT SMART grants ([Urban Freight Lab](https://urbanfreightlab.com/research-projects/open-mobility-foundation-smart-grant-curb-collaborative/)) |
 | United Kingdom | Van traffic grew 2.3 % to 59.0 billion vehicle miles in the year to September 2024 ([Department for Transport](https://www.gov.uk/government/statistics/provisional-road-traffic-estimates-great-britain-october-2023-to-september-2024)) |
-| European Union | Data protection by design is a legal duty ([GDPR Article 25](https://gdpr-info.eu/art-25-gdpr/)), which favors curb sensors that cannot capture personal data at all |
+| European Union | Data protection by design is a legal duty ([Regulation (EU) 2016/679, Article 25](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679)), which favors curb sensors that cannot capture personal data at all |
 | South Korea | Online sales reached 25.9 % of retail in 2020, the highest share UNCTAD reported ([UNCTAD, 2021](https://unctad.org/news/global-e-commerce-jumps-267-trillion-covid-19-boosts-online-sales)), so dense cities carry heavy parcel traffic |
-| India | Dense market streets in large cities have few formal loading bays; a low-cost open sensor lets a city or market association pilot marked bays and measure their use |
-| Mexico and Brazil | Large cities with busy retail districts can trial loading bay management on one street without a long vendor contract |
+| India | National guidelines for City Logistics Plans ask cities to optimize loading and unloading lots and to track the daily use of each bay and the number of deliveries it serves ([DPIIT, Guidelines for Preparing City Logistics Plan](https://www.dpiit.gov.in/static/uploads/2025/07/4e218c186c4bdbc202d9f1f62bb9b372.pdf)); a low-cost open sensor can supply that count without cameras |
+| Brazil | São Paulo's traffic agency lists 1,749 on-street truck bays reserved for loading and unloading, paid by digital card for one or two hours ([CET São Paulo](https://www.cetsp.com.br/consultas/zona-azul/vagas-especiais/vagas-caminhao.aspx)); sensing could show drivers which are free and show the city how long each stop lasts |
 
 ## What sparked the idea
 
-The starting point was San Francisco's SFpark pilot, which set magnetometer "pucks" into metered parking spaces to publish real-time availability. The agency's own sensor data guide records where that approach fell short: the in-ground sensors, 4 in (about 100 mm) across, had batteries intended to last about five years, yet some began to fail in late 2012 and early 2013, about a year earlier than expected, and users were advised to aggregate the data by hour and by block to reduce the effect of sensor error ([SFMTA, Parking Sensor Data Guide, 2013](https://www.sfmta.com/sites/default/files/reports-and-documents/2018/08/sfpark_dataguide_parkingsensordata.pdf)). LoadZone takes the same sensing principle to the loading bay, where stops last minutes rather than hours, and answers those lessons in the open: a surface-bonded puck that needs no coring, a cell budget derated 40 % against the five-year target, and firmware and data that a city can inspect rather than rent.
+The starting point was San Francisco's SFpark pilot, which set magnetometer "pucks" into metered parking spaces to publish real-time availability. The agency's own sensor data guide records where that approach fell short: the in-ground sensors, 4 in (about 100 mm) across, had batteries intended to last about five years, cut to about three by noise-filtering software, yet some began to fail in late 2012 and early 2013, about a year earlier than expected, and users were advised to aggregate the data by hour and by block to reduce the effect of sensor error ([SFMTA, Parking Sensor Data Guide, 2013](https://www.sfmta.com/sites/default/files/reports-and-documents/2018/08/sfpark_dataguide_parkingsensordata.pdf)). LoadZone takes the same sensing principle to the loading bay, where stops last minutes rather than hours, and answers those lessons in the open: a surface-bonded puck that needs no coring, a cell budget derated 40 % against the five-year target, and firmware and data that a city can inspect rather than rent.
 
 ## Problem
 
@@ -96,6 +96,12 @@ The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (LDZ-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `LDZ-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 
