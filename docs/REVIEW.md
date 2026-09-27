@@ -188,3 +188,28 @@ Sources in the README were checked against the standard of 2026-09-26 ("Fix the 
 | What sparked the idea | SFMTA Parking Sensor Data Guide (kept) | Same source; wording corrected to note that noise-filtering software had cut the expected battery life to about three years before the early failures |
 
 No budget change in this session.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26. This session adds an appearance model for photoreal renders; the render images themselves are produced later by the portfolio orchestrator.
+
+### What was added
+
+- `cad/src/product_model.py`: `product_parts()` (33 parts: 5 shell, 12 internal, 10 accessory, 6 context), `TITLE` and `RENDER_VIEWS` (hero, exploded and detail). It imports `PARAMS`, `derived()` and `build_parts()` from `cad/src/model.py`, so every main dimension and interface is unchanged.
+- Puck: the model.py dome with a softened foot, a mold parting line, 24 radial anti-skid grooves on the flank, and a recessed crown badge ("LOADZONE BAY SENSOR") with a teal accent ring; the base disc with softened edges; the epoxy bed with a rounded squeeze-out bead; clear amber potting; cells with end caps; the pulse capacitor; the radio carrier board with a shielded module, flash, regulator, diodes and u.FL connector; the magnetometer breakout with its IC and header; the flexible antenna with a copper trace pattern.
+- Sign option: rounded, painted sign face with a raised "LOADING ZONE" legend, border and teal band; a filleted display housing with a polycarbonate window over the e-paper panel showing "2 FREE BAYS" and an arrow; a cable gland; band clamps with ears, clamp bolts and face bolts.
+- Context (neutral colours): an asphalt road patch with a white bay edge line and slot end line, a kerb stone, sidewalk paving and a short section of the existing street pole.
+- README: hero image now points to `media/render-hero.png`, with a link to `media/render-exploded.png`.
+
+### Where the appearance model differs from model.py
+
+1. **Render layout.** In the hero view the kerb is drawn 400 mm from the puck (installed 1.3 m) and the sign's lower edge 250 mm above the sidewalk (installed 2.1 m), so the puck and sign read in one frame; the view note says so. Proposed, awaiting Amish. Recommendation: accept for the hero render, and keep the true layout in the concept hero and the drawing.
+2. **Dome surface detail.** The anti-skid grooves (about 1.1 mm deep), parting line (0.45 mm) and crown badge recess (1.0 mm) are cut into the 4 mm cast wall. Proposed, awaiting Amish. Recommendation: accept as appearance only, and check the local wall and the wheel-load path when the mold is designed.
+3. **Potting colour.** The potting is shown as a clear amber polyurethane so the internals read in the exploded render; the BOM does not set a colour. Proposed, awaiting Amish. Recommendation: treat clear potting as a render convention unless a clear grade suits the budget.
+4. **Sign artwork.** The legend, "FREE BAYS" label, teal band and e-paper image are placeholder artwork. Proposed, awaiting Amish. Recommendation: set the final legend to the local traffic sign rules of the first trial city (O1).
+5. **Host FieldNode.** The host FieldNode (BOM 11) above the sign is left out of the renders to keep the frame compact; only the cable gland hints at its supply. Proposed, awaiting Amish. Recommendation: accept, and mention the FieldNode in the render caption.
+6. **Minor.** The flexible antenna is drawn 0.6 mm thick (1.0 mm envelope in model.py), the display housing is filleted with a window pocket, and the clamps gain bolt ears. The exploded view shows the puck only, because the 600 mm sign would dwarf the 150 mm puck.
+
+### Status
+
+This is an appearance model only: no tolerances, PCB layouts or fabrication detail were added. `trl` stays 3, and TRL 4 remains on hold. No budget change in this session.

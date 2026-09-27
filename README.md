@@ -6,9 +6,9 @@
 
 A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
 
-![LoadZone concept](media/hero.png)
+![LoadZone: loading bay occupancy sensor puck and driver sign, product render](media/render-hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/LDZ-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/LDZ-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
