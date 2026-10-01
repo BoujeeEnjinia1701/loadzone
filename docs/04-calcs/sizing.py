@@ -1,4 +1,4 @@
-"""LoadZone sizing calculations, LDZ-CAL-001 v0.2 (TRL 3, LDZ-DDR-002 applied).
+"""LoadZone sizing calculations, LDZ-CAL-001 v0.3 (TRL 3, LDZ-DDR-002 and LDZ-DDR-003 applied).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md (tags in brackets, for example
@@ -321,10 +321,12 @@ core = sum(cost(r) for r in bom if ln(r) <= 7 or ln(r) == 12)
 sign = sum(cost(r) for r in bom if 8 <= ln(r) <= 10)
 fn = sum(cost(r) for r in bom if ln(r) == 11)
 per_puck = sum(float(r["unit_cost_usd"]) for r in bom if ln(r) <= 7)
-out("I1", f"two-puck kit ${core:.2f} against budget_usd ${budget:.0f} (margin ${budget - core:.2f}); per puck ${per_puck:.2f}; "
-          f"sign option ${sign:.2f}; host FieldNode ${fn:.2f}; bay with sign ${core + sign + fn:.2f}")
-res("R13", f"${core:.2f} for two pucks; sign option ${sign:.2f} plus FieldNode ${fn:.2f}, outside the budget (D6)",
-    f"Two-puck kit ${budget:.0f} or less", "Met on paper" if core <= budget else "Not met")
+tool = sum(cost(r) for r in bom if ln(r) == 13)
+diff = budget - core
+out("I1", f"two-puck kit ${core:.2f}; value-engineering target (budget_usd) ${budget:.0f}: ${abs(diff):.2f} {'under' if diff >= 0 else 'over'} the target; per puck ${per_puck:.2f}; "
+          f"sign option ${sign:.2f}; host FieldNode ${fn:.2f}; bay with sign ${core + sign + fn:.2f}; one-off dome casting tooling ${tool:.2f}")
+res("R13", f"${core:.2f} for two pucks, ${abs(diff):.2f} {'under' if diff >= 0 else 'over'} the value-engineering target; sign option ${sign:.2f} plus FieldNode ${fn:.2f}, costed separately (D6)",
+    f"Two-puck kit: value-engineering target ${budget:.0f}", "Met on paper (under the target)" if core <= budget else f"Over the value-engineering target by ${-diff:.2f}")
 
 # =============================================================== J. Design-review items
 res("R8", "Cells -55 to +85 C, magnetometer and module -40 to +85 C class; pulse capacitor must be an 85 C hybrid type; fully potted",

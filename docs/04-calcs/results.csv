@@ -11,6 +11,6 @@ R9,"Magnetometer only; 12-byte payload of state, timer, confidence, voltage, tem
 R10,"park_start, park_end, scheduled_report, comms_lost and comms_restored map onto CDS Events; occupancy and dwell onto Metrics",Open API mapping onto CDS Events and Metrics,Met by design
 R11,"about 28 m by day at full contrast (78 mm digits); unlit at night, as restated","25 m by day (daylight only, DDR-002)",Met on paper
 R12,0.42 Wh/day drawn (17.7 mW) against 2.40 Wh/day (100 mW),Within the host FieldNode allowance,Met on paper (private network only: 200 downlinks/day)
-R13,"$114.00 for two pucks; sign option $97.00 plus FieldNode $126.00, outside the budget (D6)",Two-puck kit $120 or less,Met on paper
+R13,"$116.00 for two pucks, $4.00 under the value-engineering target; sign option $101.00 plus FieldNode $126.00, costed separately (D6)",Two-puck kit: value-engineering target $120,Met on paper (under the target)
 R14,"Bonded pad, no road cutting; time depends on the adhesive","15 min per puck, two-person crew",Not verifiable at TRL 3
 R15,No external fasteners; bonded; removal flagged by a field and orientation step,No screws; removal reported,Met by design

@@ -3,9 +3,9 @@ doc_id: LDZ-REQ-001
 title: LoadZone requirements
 project: LoadZone
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Constructable design (LDZ-DDR-003); R13 reported against the value-engineering target
 ---
 
 # LoadZone requirements
 
-These are the requirements for the concept, checked by calculation at TRL 3 in LDZ-CAL-001 v0.2. On 2026-09-25 Amish accepted the recommendations (LDZ-DDR-002), so this version restates three targets: R4 is now a gateway within 300 m of the bay rather than 1 km; R6 is restated with the finding that the wheels of a vehicle parked inside the bay lines straddle the puck, and the bond is two-part road-marker epoxy; and R11 is a daylight-only target. R13 covers the two-puck bay kit only, with the sign option costed separately (LDZ-DDR-001 D6, now decided). R12 uses FieldNode's published 100 mW allowance.
+These are the requirements for the concept, checked by calculation at TRL 3 in LDZ-CAL-001 v0.3 on the constructable design of LDZ-DDR-003, which changes no requirement status. On 2026-09-25 Amish accepted the recommendations (LDZ-DDR-002), so this version restates three targets: R4 is now a gateway within 300 m of the bay rather than 1 km; R6 is restated with the finding that the wheels of a vehicle parked inside the bay lines straddle the puck, and the bond is two-part road-marker epoxy; and R11 is a daylight-only target. R13 covers the two-puck bay kit only, with the sign option costed separately (LDZ-DDR-001 D6, now decided); its figure is a value-engineering target, not a spending limit (Amish, 2026-10-01). R12 uses FieldNode's published 100 mW allowance.
 
 Table 1. Requirements
 
@@ -47,7 +51,7 @@ Table 1. Requirements
 | R10 | Open data | Bay state available through an open API that maps onto the Curb Data Specification Events and Metrics APIs ([Open Mobility Foundation](https://www.openmobilityfoundation.org/about-cds/)) | Met by design: events map onto `park_start`, `park_end`, `scheduled_report`, `comms_lost` and `comms_restored` | Design review (TRL 3) |
 | R11 | Sign legible to drivers (option) | Free-slot count legible at 25 m by day (daylight only, restated, LDZ-DDR-002); at night drivers use the data feed | Met on paper: about 28 m by day at full contrast with 78 mm digits | Legibility calculation (TRL 3) |
 | R12 | Sign power (option) | Sign runs within the host FieldNode's sensor energy allowance | Met on paper: 0.42 Wh a day (17.7 mW) against FieldNode's published 100 mW; needs a private network for its 200 downlinks a day (LDZ-DDR-002, O5) | Power budget (TRL 3) |
-| R13 | Low cost | Two-puck bay kit $120 or less in parts at quantity 1; the sign option and its host FieldNode are costed separately and excluded | Met on paper: $114.00. Sign option $97.00 plus a FieldNode at $126.00 | Priced BOM |
+| R13 | Low cost | Two-puck bay kit in parts at quantity 1 against a value-engineering target of USD 120; the sign option and its host FieldNode are costed separately and excluded | Met on paper: estimated USD 116.00, USD 4.00 under the target. Sign option USD 101.00 plus a FieldNode at USD 126.00 | Priced BOM |
 | R14 | Quick install without road works | One puck bonded in 15 min or less by a two-person crew; removable without damaging the road | Not verifiable at TRL 3 | Install trial (TRL 4 or later) |
 | R15 | Tamper and theft resistant | No external screws; removal needs a heat gun or scraper; device reports removal | Met by design: bonded, no fasteners; removal flagged by a sudden field and orientation change | Design review (TRL 3) |
 

@@ -3,9 +3,9 @@ doc_id: LDZ-PRC-001
 title: LoadZone design precis
 project: LoadZone
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,13 +25,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: "Constructable design (LDZ-DDR-003): base tray and sign brackets; cost against the value-engineering target"
 ---
 
 # LoadZone design precis
 
 ## Summary
 
-LoadZone is a low, battery-powered puck bonded to the road in the middle of each vehicle slot of a loading bay. A 3-axis magnetometer senses the change in the Earth's magnetic field when a vehicle's steel body parks over it, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" in about 18 s (39 s at worst at SF9). A server turns the reports into bay state, dwell times and an open data feed that maps onto the Curb Data Specification, and, as an option, a solar e-paper sign on an existing pole shows approaching drivers how many slots are free. The TRL 3 calculations (LDZ-CAL-001) give a cell life of 7.7 years at SF9 on two AA-size lithium thionyl chloride cells and a two-slot bay kit of $114.00 in parts, within the $120 budget. They also find the weak points: from road level under a parked van a puck reaches a gateway only about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4 as restated); the road bond is at risk under braking; and the sign is unlit, so it serves drivers by day only (R11 as restated). The design choices below were decided by Amish on 2026-09-25 (LDZ-DDR-001 and LDZ-DDR-002).
+LoadZone is a low, battery-powered puck bonded to the road in the middle of each vehicle slot of a loading bay. A 3-axis magnetometer senses the change in the Earth's magnetic field when a vehicle's steel body parks over it, and a LoRaWAN radio from the lab's FieldNode core reports "free" or "occupied" in about 18 s (39 s at worst at SF9). A server turns the reports into bay state, dwell times and an open data feed that maps onto the Curb Data Specification, and, as an option, a solar e-paper sign on an existing pole shows approaching drivers how many slots are free. The TRL 3 calculations (LDZ-CAL-001) give a cell life of 7.7 years at SF9 on two AA-size lithium thionyl chloride cells and a two-slot bay kit estimated at USD 116 in parts against a value-engineering target of USD 120. They also find the weak points: from road level under a parked van a puck reaches a gateway only about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4 as restated); the road bond is at risk under braking; and the sign is unlit, so it serves drivers by day only (R11 as restated). The design choices below were decided by Amish on 2026-09-25 (LDZ-DDR-001 and LDZ-DDR-002). Writing the prototype build plan (LDZ-BLD-001) made the design constructable without changing what it does (LDZ-DDR-003, open for Amish's review); open items are in the design decisions register (LDZ-DEC-001).
 
 ![LoadZone concept](../media/hero.png)
 
@@ -60,11 +64,11 @@ Table 1. Components (numbers match `bom/bom.csv` and Figure 3)
 | 3 | Controller and radio | STM32WL-class LoRaWAN module on a small carrier, the same core as FieldNode |
 | 4 | Antenna | Flexible PCB antenna for 868 or 915 MHz, fixed inside the dome wall, above the cells |
 | 5 | Cells | Two AA-size Li-SOCl2 bobbin cells (about 2.6 Ah each, typical rating) in parallel through one Schottky diode each, with an 85 °C hybrid pulse capacitor to supply transmit current |
-| 6 | Base and potting | Flat 150 x 6 mm base disc; the dome cavity is fully potted in semi-rigid polyurethane, which carries wheel loads through to the base |
+| 6 | Base and potting | Printed 150 x 6 mm base tray with a ring that locates the dome, cradles for the cells, standoffs for the board and a rib for the antenna; the dome cavity is fully potted in semi-rigid polyurethane through a fill hole in the tray, and the potting carries wheel loads through to the base (LDZ-DDR-003) |
 | 7 | Road-marker epoxy bed | Two-part road-marker epoxy, as used for raised pavement markers, as a 170 mm bed about 3 mm thick (LDZ-DDR-002; a bitumen pad is no longer used) |
 | 8 | Sign face (option) | Aluminium composite panel, 450 x 600 mm, "Loading zone" legend and a window for the display |
 | 9 | Display (option) | 7.5 in e-paper panel with driver board, behind a polycarbonate window in a sealed housing |
-| 10 | Sign clamps (option) | Two stainless band clamps with brackets for 60 to 90 mm poles |
+| 10 | Sign brackets (option) | Two aluminium channel brackets bolted to the back of the sign, each with a stainless band clamp for 60 to 90 mm poles (LDZ-DDR-003) |
 | 11 | Host FieldNode (option) | Standard FieldNode (6 W panel, LiFePO4 cell, LoRaWAN class C), mounted above the sign and priced once in the FieldNode repo ($126.00) |
 
 ![Exploded view](../media/exploded.png)
@@ -108,7 +112,7 @@ Table 2. Puck energy budget at SF9
 
 **Mass and size.** Puck 451 g without the pad (75 g), 150 mm diameter, 31 mm high.
 
-**Cost.** $114.00 in parts for a two-slot kit, within the $120 budget, which covers the two-puck kit only (LDZ-DDR-001, D6). The sign option adds $97.00 plus a host FieldNode at $126.00 (see `bom/bom.csv`).
+**Cost.** Value-engineering target: USD 120, for the two-puck kit only (LDZ-DDR-001, D6). Estimated cost of the constructable design: USD 116 (USD 4 under the target). The sign option adds USD 101 plus a host FieldNode at USD 126, and the one-off dome casting tooling USD 35 (see `bom/bom.csv`).
 
 ## Key design choices
 

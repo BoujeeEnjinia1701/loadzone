@@ -15,12 +15,17 @@ trl_evidence:
   - docs/04-calcs/sizing.py
   - docs/04-calcs/results.csv
   - cad/src/model.py
+  - docs/decisions/0003-design-for-construction.md
+  - docs/05-build-plan.md
+  - docs/06-design-decisions.md
+  - cad/src/build_plan_media.py
   - cad/step/loadzone-puck.step
   - cad/stl/loadzone-puck.stl
   - cad/drawings/LDZ-DWG-001.svg
   - cad/drawings/LDZ-DWG-001.pdf
   - bom/bom.csv
   - bom/bom-notes.md
+design_state: constructable   # STANDARDS section 18; LDZ-DDR-003
 shortlisted: false
 pitch: >-
   A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.

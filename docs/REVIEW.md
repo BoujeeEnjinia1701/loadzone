@@ -219,3 +219,52 @@ This is an appearance model only: no tolerances, PCB layouts or fabrication deta
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-01: design for construction and prototype build plan (kit 1.7.0)
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` now matches `.kit/CLAUDE.md`.
+- Constructability review of every part, with build123d checks in `cad/src/model.py` (`python cad/src/model.py --check`): 92 checks, all pass. The model now also builds the dome casting tooling (`build_tooling`) and a sign mount that can be made and fitted.
+- `docs/decisions/0003-design-for-construction.md` (LDZ-DDR-003 v0.1, Draft): every change, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review.
+- `docs/05-build-plan.md` (LDZ-BLD-001 v0.1): the illustrated prototype build plan, with 7 making sketches (`cad/drawings/LDZ-DWG-101` to `107`), 8 joint close-ups, 9 step pictures, a tray layout, a sign face drilling layout and a wiring diagram (`docs/05-build-plan/`), all drawn by `cad/src/build_plan_media.py`.
+- `docs/06-design-decisions.md` (LDZ-DEC-001 v0.1): 10 open decisions, 7 items to confirm when parts are bought, a value-engineering section and the decisions made.
+- `bom/bom.csv`: lines 1, 3, 6, 9, 10 and 12 re-specified, line 13 (one-off casting tooling) added; `bom/bom-notes.md` updated.
+- Calculations re-run on the constructable design: LDZ-CAL-001 v0.3 (`docs/04-calcs/sizing.py` now reports cost against the value-engineering target); LDZ-REQ-001 v0.5 and LDZ-PRC-001 v0.5 updated to match.
+- STEP and STL regenerated (puck, dome, base tray, sign option, dome tooling); general arrangement LDZ-DWG-001 Rev P3; concept media regenerated (`python cad/src/concept_media.py`).
+- `project.yaml`: `design_state: constructable`; build plan, register, DDR-003 and the picture script added to `trl_evidence`. `budget_usd` unchanged at 120.
+- `README.md`: value-engineering wording in the header, "Prototype build plan" and "Design decisions" links, and a "Building the prototype" section before "Safety".
+
+### Design changes made for construction (LDZ-DDR-003)
+
+1. Base: a printed tray with a tapered locating ring for the dome, an 8 mm fill hole and four 4 mm vents; the seam is sealed and the puck is potted upside down.
+2. Inside the puck: cradles for the cells, four board standoffs and an antenna rib printed on the tray; the capacitor and antenna stand on the tray.
+3. Cells moved 3 mm and the capacitor with them toward the centre (2.5 mm from the dome wall, was 1.2 mm).
+4. Antenna moved 2 mm inward onto the rib (3.8 mm from the dome wall, was 1.9 mm).
+5. Dome casting: printed mould master, silicone mould and printed core plug with flange, skirt and overflow holes (BOM line 13).
+6. Programming pads on the radio board and a programming and bench-test hold point before the dome goes on; the board is prototyping board.
+7. Sign mount: two aluminium channel brackets bolted to the sign, with stainless band clamps through slots in their flanges, in place of solid rings; sign 33 mm off the pole (was 30); brackets 100 mm from the sign's ends (was 120).
+8. Display housing: a bought enclosure with a clear lid, screwed from behind the sign, with an M20 gland through the sign face.
+
+### Key results
+
+- Mass unchanged at 451 g without the bed; height 31 mm; loads, link, energy and detection figures unchanged.
+- Value-engineering target: USD 120. Estimated cost of the constructable design: USD 116 for the two-puck kit (USD 4 under the target). Sign option USD 101 (was 97) plus a USD 126 FieldNode; one-off tooling USD 35.
+- Requirement status unchanged: none not met, 3 at risk (R1, R5, R6), 1 not verifiable at TRL 3 (R14), 7 met on paper, 4 met by design.
+
+### Proposed, awaiting Amish
+
+All are in `docs/06-design-decisions.md`. New this session: acceptance of LDZ-DDR-003 (item 1), a sealed-for-life puck with over-the-air updates (item 3), the base tray material for the epoxy bond (item 4) and fixings showing on the sign face (item 5).
+
+### Safety concerns
+
+- Potting over live Li-SOCl2 cells: use a low-exotherm grade and check its peak temperature (build plan stop S4).
+- Polyurethane casting and potting involve isocyanates: ventilation and a suitable respirator (stop S3).
+
+### Stale media (made on Amish's Mac; not regenerated here)
+
+- `cad/src/product_model.py` still draws the concept's ring clamps (it reads the clamp band width and thickness, now 12 and 0.8 mm), and its puck internals use the old cell and antenna positions. The photoreal renders that show the sign (`media/render-hero.png` and any other `media/render-*.png` with the sign) and `media/card.png` and `media/social-preview.png` are stale for the sign mount; the puck's outside is unchanged.
+
+### Recommended next step
+
+Amish's review of LDZ-DDR-003 and the open decisions in LDZ-DEC-001, then the product model and renders updated on the Mac. TRL 4 (building to this plan) remains on hold.

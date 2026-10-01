@@ -3,9 +3,9 @@ doc_id: LDZ-CAL-001
 title: LoadZone sizing calculations
 project: LoadZone
 doc_type: Calculation note
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,13 +17,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Constructable design (LDZ-DDR-003) re-run; cost reported against the value-engineering target
 ---
 
 # LoadZone sizing calculations
 
-On paper, LoadZone meets eleven of its fifteen requirements (seven by calculation, four by design), has three at risk and leaves one that only an installation trial can settle; none is now not met. Version 0.2 applies Amish's decisions of 2026-09-25 (LDZ-DDR-002). **R4**, restated as a gateway within 300 m of the bay, is met on paper: from road level under a parked van a puck reaches about 353 m in a street canyon at SF9 with a 10 dB fade margin (it was not met against the TRL 2 target of 1 km). **R11**, restated as daylight only, is met on paper at about 28 m (it was not met at night). R1 (detection), R5 (airtime at slow data rates) and R6 (bond under braking, now with a two-part epoxy bed) are at risk. The core numbers of the TRL 2 concept stand or improve: cell life is 7.7 years at SF9, the worst-case report time is 38.6 s, and the two-puck kit costs $114.00 against the $120 budget.
+On paper, LoadZone meets eleven of its fifteen requirements (seven by calculation, four by design), has three at risk and leaves one that only an installation trial can settle; none is now not met. Version 0.2 applies Amish's decisions of 2026-09-25 (LDZ-DDR-002). **R4**, restated as a gateway within 300 m of the bay, is met on paper: from road level under a parked van a puck reaches about 353 m in a street canyon at SF9 with a 10 dB fade margin (it was not met against the TRL 2 target of 1 km). **R11**, restated as daylight only, is met on paper at about 28 m (it was not met at night). R1 (detection), R5 (airtime at slow data rates) and R6 (bond under braking, now with a two-part epoxy bed) are at risk. The core numbers of the TRL 2 concept stand or improve: cell life is 7.7 years at SF9, the worst-case report time is 38.6 s, and the two-puck kit is estimated at USD 116.00 against a value-engineering target of USD 120. Version 0.3 re-runs every figure on the constructable design of LDZ-DDR-003 (base tray, cradles, moved cells and antenna, channel brackets on the sign): mass, loads, link and energy are unchanged, and only the cost moves.
 
-Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of the script's output that carries it. Run it from the repo root with `python docs/04-calcs/sizing.py`; it also writes `docs/04-calcs/results.csv`. The script imports `PARAMS`, `derived()` and the part volumes from `cad/src/model.py`, so the geometry here is the geometry in the STEP files and in drawing LDZ-DWG-001. It reads the costs from `bom/bom.csv` and `budget_usd` from `project.yaml`. All values are first-principles estimates; nothing is measured.
+Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of the script's output that carries it. Run it from the repo root with `python docs/04-calcs/sizing.py`; it also writes `docs/04-calcs/results.csv`. The script imports `PARAMS`, `derived()` and the part volumes from `cad/src/model.py`, so the geometry here is the geometry in the STEP files and in drawing LDZ-DWG-001. It reads the costs from `bom/bom.csv` and `budget_usd` from `project.yaml`, which is a hypothetical value-engineering target, not a spending limit. All values are first-principles estimates; nothing is measured.
 
 > **Safety:** These are paper estimates. They do not show that a puck is safe to leave in a roadway, that the primary lithium cells are safe in a hot road, or that the bond will hold. Bond strength, cell temperature and crush behavior must be checked on hardware before any puck is installed, and only under a road permit with traffic management. See LDZ-PRC-001, Safety.
 
@@ -88,7 +92,7 @@ The model gives a puck 31.0 mm high on a 150 mm base, a 170 mm pad, a 104 mm cro
 
 ## 10. Cost (R13)
 
-The two-puck kit costs **$114.00 against `budget_usd` $120**, a margin of $6.00; one puck costs $54.00 [I1]. Under D6 the budget covers the two-puck kit only. The sign option costs $97.00, and its host FieldNode $126.00 (priced in the FieldNode BOM), for $337.00 per bay with the sign [I1]. **R13 is met on paper**, with a thin margin on indicative prices.
+Value-engineering target: USD 120 (`budget_usd`). Estimated cost of the constructable design: **USD 116.00 for the two-puck kit (USD 4.00 under the target)**; one puck costs USD 54.00 [I1]. The target covers the two-puck kit only (D6). Making the design constructable added USD 2.00 for sealant, screws and mould release (LDZ-DDR-003). The sign option costs USD 101.00 (USD 97.00 before its channel brackets), and its host FieldNode USD 126.00 (priced in the FieldNode BOM), for USD 343.00 per bay with the sign; the one-off dome casting tooling, USD 35.00, is not a per-kit cost [I1]. **R13 is met on paper (under the target)**, on indicative prices.
 
 ## 11. Requirement status
 
@@ -106,7 +110,7 @@ The two-puck kit costs **$114.00 against `budget_usd` $120**, a margin of $6.00;
 | R7 | Low profile | 31 mm high, 150 mm diameter, 6 mm crown radius, yellow | 35 mm or less, rounded | Met on paper |
 | R11 | Sign legible (option) | About 28 m by day at full contrast; unlit at night | 25 m by day (restated, daylight only) | Met on paper |
 | R12 | Sign power (option) | 0.42 Wh a day (17.7 mW) against 100 mW | Within the FieldNode allowance | Met on paper (private network only) |
-| R13 | Low cost | $114.00 for two pucks | $120 or less | Met on paper |
+| R13 | Low cost | USD 116.00 for two pucks, USD 4.00 under the target | Value-engineering target USD 120 | Met on paper (under the target) |
 | R8 | Weather and temperature | Parts rated -40 to +85 °C with an 85 °C pulse capacitor; fully potted | IP68; -25 to +70 °C | Met by design (sealing not verifiable at TRL 3) |
 | R9 | Privacy | Magnetometer only; state, timer, confidence, voltage, temperature | No images, audio or identifiers | Met by design |
 | R10 | Open data | CDS Events `park_start`, `park_end`, `scheduled_report`, `comms_lost`, `comms_restored`; Metrics for occupancy and dwell | Maps onto CDS Events and Metrics | Met by design |
@@ -130,4 +134,4 @@ The Curb Data Specification event types used for R10 were checked against the sp
 | Sign legible at about 10 m | About 28 m by day at full contrast | Corrected; R11 restated to daylight only and met on paper (LDZ-DDR-002) |
 | Sign about 0.4 Wh a day | 0.42 Wh a day drawn | Stands |
 | Puck about 0.35 kg | 451 g without pad | Corrected |
-| Two-puck kit about $110 | $114.00 with the diodes and 85 °C capacitor | Corrected |
+| Two-puck kit about $110 | USD 116.00 with the diodes, 85 °C capacitor and construction consumables | Corrected |

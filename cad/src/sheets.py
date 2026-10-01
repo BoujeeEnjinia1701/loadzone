@@ -1,4 +1,4 @@
-"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P2).
+"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P3).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/LDZ-DWG-001.svg, .pdf and .png from the parametric model.
@@ -20,24 +20,25 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="LoadZone", title="General arrangement, bay sensor puck", dwg_no="LDZ-DWG-001",
-          rev="P2", author="Amish Chadha", date="2026-09-25", concept=True,
-          material="Dome rigid cast PU, yellow; PU potting; ASA base; two-part road-marker epoxy bed. See bom/bom.csv",
+          rev="P3", author="Amish Chadha", date="2026-10-01", concept=True,
+          material="Dome rigid cast PU, yellow; PU potting; printed ASA base tray; two-part road-marker epoxy bed. See bom/bom.csv",
           revisions=[("P1", "Preliminary GA from LDZ-CAL-001 v0.1", "2026-09-25", "AC"),
-                     ("P2", "Epoxy bed; notes per LDZ-DDR-002", "2026-09-25", "AC")])
+                     ("P2", "Epoxy bed; notes per LDZ-DDR-002", "2026-09-25", "AC"),
+                     ("P3", "Base tray, cradles, fill and vents (LDZ-DDR-003)", "2026-10-01", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 30, 140, 84, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [
     f"Height {D['height']:.0f} above road: pad {P['pad_t']:.0f}, base {P['base_t']:.0f}, dome {P['dome_h']:.0f}",
     f"Base dia {D['diameter']:.0f}; pad dia {D['pad_d']:.0f}; crown dia {D['crown_d']:.0f}",
     f"Dome wall {P['wall']:.0f}; crown radius {P['crown_fillet']:.0f}; cavity fully potted",
-    f"Cells 2 x AA Li-SOCl2 ({P['cell_d']} x {P['cell_l']}), Schottky per cell",
-    "Magnetometer on the carrier, sensing axis Z up",
-    "Antenna at the +X dome edge; no metal above it",
+    f"Cells 2 x AA Li-SOCl2 ({P['cell_d']} x {P['cell_l']}) in tray cradles",
+    "Base tray: spigot locates dome; board on 3 mm standoffs",
+    f"Pot through {P['fill_d']:.0f} mm fill hole, puck inverted; {len(P['vents'])} vents {P['vent_d']:.0f} mm",
+    "Antenna on the tray rib at +X; no metal above it",
     f"Placement: slot center, {P['puck_from_curb'] / 1000:.1f} m from curb face,",
     f"  one puck per {P['slot_l'] / 1000:.0f} m slot, clear of bike lanes",
     "Bond: two-part road-marker epoxy bed",
     "Crown 7.4 MPa at a 49 kN wheel (LDZ-CAL-001 F)",
-    "Gateway within 300 m of the bay (R4)",
     "Mass about 0.45 kg without pad",
     "Road work only under permit and traffic control",
     "PRELIMINARY, NOT FOR FABRICATION",

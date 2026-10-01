@@ -2,13 +2,13 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1388477117.svg)](https://zenodo.org/badge/latestdoi/1388477117) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/loadzone/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/loadzone/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/loadzone/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/loadzone)
 
-**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $120 USD · **Difficulty:** 2 of 5
+**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 120 (estimated cost USD 116) · **Difficulty:** 2 of 5
 
 A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
 
 ![LoadZone: loading bay occupancy sensor puck and driver sign, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/LDZ-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/LDZ-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -69,9 +69,15 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 - Open server and data feed that maps onto the Curb Data Specification
 - Solar signage option: 7.5 in e-paper sign on an existing pole, powered by a host FieldNode, legible by day; needs a private network server such as TwinKit
 
-TRL 3 calculations ([LDZ-CAL-001](docs/04-calcs/01-sizing.md)): state reported in 17.7 s typically and 38.6 s at worst, 7.7 years on one set of cells, and $114.00 in parts for a two-slot bay against the $120 budget; the sign option ($97.00 plus a $126.00 FieldNode) is costed separately. No requirement is now not met. A puck under a parked van reaches a gateway about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4), and the e-paper sign is a daylight-only aid, unlit at night (R11). Detection of high-clearance trucks (R1), airtime at slow data rates (R5) and the epoxy road bond under braking (R6) are at risk. See the [design precis](docs/02-concept.md), [requirements](docs/03-requirements.md) and design decisions ([LDZ-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [LDZ-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
+TRL 3 calculations ([LDZ-CAL-001](docs/04-calcs/01-sizing.md)): state reported in 17.7 s typically and 38.6 s at worst, 7.7 years on one set of cells, and an estimated USD 116 in parts for a two-slot bay against a value-engineering target of USD 120 (USD 4 under it); the sign option (USD 101 plus a USD 126 FieldNode) is costed separately. No requirement is now not met. A puck under a parked van reaches a gateway about 350 m away in a street canyon, so each bay needs a gateway within 300 m (R4), and the e-paper sign is a daylight-only aid, unlit at night (R11). Detection of high-clearance trucks (R1), airtime at slow data rates (R5) and the epoxy road bond under braking (R6) are at risk. See the [design precis](docs/02-concept.md), [requirements](docs/03-requirements.md) and design decisions ([LDZ-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [LDZ-DDR-002](docs/decisions/0002-recommendations-accepted.md), [LDZ-DDR-003](docs/decisions/0003-design-for-construction.md)). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
+
+## Building the prototype
+
+![LoadZone prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
+
+The [prototype build plan](docs/05-build-plan.md) (LDZ-BLD-001) shows, in pictures, how to make each of the eleven components and put them together in nine steps; nothing has been built yet. Each puck is a polyurethane dome cast in a home-made silicone mould with a printed core, on a printed base tray that holds the cells, radio board and antenna; the puck is then potted solid through a hole in the tray and bonded to a test slab. The sign option is a bought sign face and display housing on two aluminium channel brackets with band clamps. Writing the plan made the design buildable: the base became a tray with a locating ring, fill and vent holes and holders for every part, the dome got a real casting process, and the sign's solid ring clamps became brackets and bands (LDZ-DDR-003, open for Amish's review). Every picture is drawn from the model, which checks that each part touches what it should and clears what it should not.
 
 ## Safety
 
@@ -83,7 +89,7 @@ The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
 | Folder | Contents |
 | --- | --- |
-| `docs/` | Problem, concept, requirements, calculations and design decisions |
+| `docs/` | Problem, concept, requirements, calculations, prototype build plan and design decisions |
 | `cad/src/` | build123d Python source, the source of truth for all geometry |
 | `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
 | `cad/drawings/` | 2D sketches and dimensioned drawings |
