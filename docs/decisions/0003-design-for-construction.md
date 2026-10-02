@@ -3,9 +3,9 @@ doc_id: LDZ-DDR-003
 title: LoadZone design for construction
 project: LoadZone
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish on 2026-10-02, including the recommendations for A1 to A3
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-01
-- **Status:** Draft. The changes in Table 1 and Table 2 were made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. The items in Table 3 are "Proposed, awaiting Amish".
+- **Status:** accepted. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2, as made, and the recommendations for A1 to A3 in Table 3, which are now decided as recommended and recorded in the design decisions register (LDZ-DEC-001).
 
 ## Context
 
@@ -51,17 +55,18 @@ The changes keep what LoadZone does: the same puck outside (150 mm across, 31 mm
 | Documents | LDZ-CAL-001 v0.3 (cost), LDZ-REQ-001 v0.5 (R13 against the value-engineering target), LDZ-PRC-001 v0.5 (components table, cost). No requirement changed status. | Follows the model. |
 | Loads and link | Unchanged: the dome, crown, base diameter and bed are the same, and the antenna is still at the dome edge with no metal above it. | |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Items proposed, then accepted by Amish as recommended on 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A1 | The potted puck is sealed for life: its cells cannot be replaced and its firmware can only change over the air. | (a) accept, as the fully potted concept implies, and plan over-the-air updates for TRL 4; (b) add a sealed service port, which weakens R8 and R15. | (a). |
-| A2 | The epoxy bed now bonds to a printed ASA tray. Epoxy keys to sanded ASA, but less well than to cast polyurethane, adding a second bond to the one already at risk under R6. | (a) printed ASA, sanded with 80 grit, checked in the TRL 4 pull-off test; (b) cast the tray in polyurethane in a second simple mould. | (a) for the first prototype; (b) if the pull-off test shows the tray side failing first. |
-| A3 | The M6 bracket bolts and M4 housing screws show as button heads on the printed face of the sign. | (a) button heads, as modelled; (b) studs bonded to the back of the panel so the face stays clean. | (a) for the prototype. |
+| A1 | The potted puck is sealed for life: its cells cannot be replaced and its firmware can only change over the air. | (a) accept, as the fully potted concept implies, and plan over-the-air updates for TRL 4; (b) add a sealed service port, which weakens R8 and R15. | (a). **Accepted 2026-10-02.** |
+| A2 | The epoxy bed now bonds to a printed ASA tray. Epoxy keys to sanded ASA, but less well than to cast polyurethane, adding a second bond to the one already at risk under R6. | (a) printed ASA, sanded with 80 grit, checked in the TRL 4 pull-off test; (b) cast the tray in polyurethane in a second simple mould. | (a) for the first prototype; (b) if the pull-off test shows the tray side failing first. **Accepted 2026-10-02.** |
+| A3 | The M6 bracket bolts and M4 housing screws show as button heads on the printed face of the sign. | (a) button heads, as modelled; (b) studs bonded to the back of the panel so the face stays clean. | (a) for the prototype. **Accepted 2026-10-02.** |
 
 ## Consequences
 
 - `design_state: constructable` in `project.yaml`. The build plan LDZ-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`); open items are in the design decisions register LDZ-DEC-001.
+- With A1 to A3 accepted, the puck is sealed for life with over-the-air updates planned for TRL 4, the base tray is printed ASA sanded with 80 grit (cast polyurethane if the TRL 4 pull-off test fails on the tray side), and the sign face shows button heads.
 - Requirement status is unchanged: none not met, 3 at risk (R1, R5, R6), 1 not verifiable at TRL 3 (R14), 7 met on paper, 4 met by design (LDZ-CAL-001 v0.3). R13 is now reported against the value-engineering target: USD 4.00 under it.
 - The appearance model `cad/src/product_model.py` and the photoreal renders (`media/render-*.png`), with `media/card.png` and `media/social-preview.png`, still show the concept's ring clamps on the sign; they need updating on Amish's Mac, where Blender is. The puck's outside is unchanged.
 - The display enclosure, the e-paper driver board and the band clamps are chosen at TRL 4; their sizes must be checked then and the holes moved to suit (LDZ-DEC-001, items to confirm).

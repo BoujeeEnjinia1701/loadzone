@@ -3,9 +3,9 @@ doc_id: LDZ-DDR-001
 title: LoadZone TRL 2 review decisions
 project: LoadZone
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 decided by Amish on 2026-10-02 (LDZ-DEC-001, item 2)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted for D1 to D8 and O2 to O7. On 2026-09-25 Amish wrote "i accept all your recommendations, go with them across all repos", so every item with a recommendation is decided by Amish, 2026-09-25: go with recommendation (see LDZ-DDR-002). Item O1 carries no recommendation and remains "Proposed, awaiting Amish".
+- **Status:** accepted for D1 to D8 and O2 to O7. On 2026-09-25 Amish wrote "i accept all your recommendations, go with them across all repos", so every item with a recommendation is decided by Amish, 2026-09-25: go with recommendation (see LDZ-DDR-002). Item O1, which carried no recommendation here, was decided by Amish on 2026-10-02 as recommended in the design decisions register (LDZ-DEC-001, item 2).
 
 ## Context
 
@@ -55,7 +59,7 @@ No reworded pitch or problem line was recommended at TRL 2, so `project.yaml` an
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First trial partner (a city curb team, a business district or a carrier) and the LoRaWAN band | Proposed, awaiting Amish. No preference stated at TRL 2. LDZ-CAL-001 uses EU868 figures |
+| O1 | First trial partner (a city curb team, a business district or a carrier) and the LoRaWAN band | **Decided by Amish, 2026-10-02:** first candidate type to approach (not yet agreed), a city curb-management or transportation team that has published or piloted the Curb Data Specification, in a city without routine snow plowing; US915 is the default band, since the 11-byte payload already fits it (LDZ-DEC-001, item 2). LDZ-CAL-001 still uses EU868 figures |
 | O2 | R4 link from under a van. LDZ-CAL-001 gives about 350 m in a street canyon at SF9 with a 10 dB fade margin, not 1 km. Options: (a) restate R4 as a gateway within 300 m of the bay, in line of sight where possible; (b) keep 1 km and accept SF12, which breaks R3 and R5; (c) add a relay. Recommendation: (a) | Decided by Amish, 2026-09-25: go with recommendation (a). Applied in LDZ-REQ-001 v0.4 |
 | O3 | R6 bond under braking. The upper-bound bond shear (1.51 MPa) exceeds the assumed adhesive-to-asphalt strength. Options: (a) specify two-part road-marker epoxy rather than a bitumen pad; (b) restate R6 with the wheel-path finding that parked wheels straddle the puck; (c) both. Recommendation: (c), with a pull-off test at TRL 4 | Decided by Amish, 2026-09-25: go with recommendation (c). Epoxy bed and restated R6 applied; the pull-off test is TRL 4 and on hold |
 | O4 | R11 night legibility. The e-paper sign reads at about 28 m by day but is unlit; a 0.5 W front light needs 2.5 times FieldNode's 100 mW allowance. Options: (a) restate R11 as daylight only; (b) a lit display with its own power; (c) drop the sign in favor of the data feed. Recommendation: (a) | Decided by Amish, 2026-09-25: go with recommendation (a). Applied in LDZ-REQ-001 v0.4 |

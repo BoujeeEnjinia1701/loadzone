@@ -28,7 +28,7 @@ trl_evidence:
 design_state: constructable   # STANDARDS section 18; LDZ-DDR-003
 shortlisted: false
 pitch: >-
-  A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
+  A curbside loading bay occupancy sensor for streets that are not plowed: it shows delivery drivers which bays are free and gives cities data on curb use.
 problem: >-
   Delivery vehicles double-park when loading bays are occupied or unknown, blocking lanes and bike paths.
 budget_usd: 120

@@ -3,9 +3,9 @@ doc_id: LDZ-PRC-001
 title: LoadZone design precis
 project: LoadZone
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: "Constructable design (LDZ-DDR-003): base tray and sign brackets; cost against the value-engineering target"
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Decisions of 2026-10-02 carried in (LDZ-DEC-001 items 2 to 7): partner and US915, sealed for life, ASA tray, button heads, legend approval rule, surface puck only and not for plowed streets'
 ---
 
 # LoadZone design precis
@@ -116,9 +120,9 @@ Table 2. Puck energy budget at SF9
 
 ## Key design choices
 
-Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendation (LDZ-DDR-001, D1 to D8, and LDZ-DDR-002). Choice 8 follows from choice 2.
+Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendation (LDZ-DDR-001, D1 to D8, and LDZ-DDR-002). Choice 8 follows from choice 2. Choices 12 and 13, and the scope note in choice 1, were decided by Amish on 2026-10-02 (LDZ-DEC-001).
 
-1. **Surface-bonded puck rather than an in-ground (cored) sensor.** No road works for a pilot and easy removal. In-ground units are better protected from plows and theft, so a cored variant stays open for deployments.
+1. **Surface-bonded puck rather than an in-ground (cored) sensor.** No road works for a pilot and easy removal. In-ground units are better protected from plows and theft. Decided by Amish, 2026-10-02 (LDZ-DEC-001, item 7): only the surface puck is offered for now, and it is not for plowed streets; the cored, in-ground version is recorded as a later option.
 2. **Magnetometer only, rather than magnetometer plus radar.** Lowest cost and power. A small radar looking up through the dome could confirm detections; it stays an open option if R1 is not met in trials.
 3. **One puck per vehicle slot of about 7 m**, rather than one per bay. Bays hold one to three vans; slot-level state lets the sign say "1 free" rather than "space somewhere".
 4. **Primary Li-SOCl2 cells rather than rechargeable cells with a solar cell on the puck.** A road-level solar cell is shaded by parked vehicles and soiled by tires. Two AA cells give margin over the 5-year target.
@@ -129,6 +133,8 @@ Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendat
 9. **Two-part road-marker epoxy bed** rather than a bitumen pad, for bond strength, with R6 restated around maneuvering wheels (LDZ-DDR-002, O3). Pull-off testing is TRL 4 work and on hold.
 10. **A gateway within 300 m of each bay** (R4 restated, LDZ-DDR-002, O2), which also keeps pucks at SF9 or faster for R2, R3 and R5.
 11. **Supply and potting details:** one Schottky diode per cell, an 85 °C hybrid pulse capacitor, a fully potted cavity and a 6 mm crown radius (LDZ-DDR-002, O6), and an 11-byte payload if the band is US915 (O7).
+12. **Sealed for life** (LDZ-DEC-001, item 3, decided 2026-10-02): the cells cannot be replaced and the firmware changes only over the air; over-the-air updates are planned for TRL 4. The base tray is printed ASA sanded with 80 grit (item 4), and the sign face shows button heads (item 5).
+13. **US915 as the default band** (LDZ-DEC-001, item 2, decided 2026-10-02), since the 11-byte payload already fits it.
 
 ## Relationship to other lab projects
 
@@ -147,7 +153,7 @@ Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendat
 
 > **Safety:** The puck is a raised object in the roadway. Keep it low with rounded edges, place it away from bike lanes and crosswalks, and keep it high-visibility. Check after install that it is fully bonded, since a loose puck can be thrown by a tire.
 
-> **Safety:** The sign option is work at height on a street pole. Use a stable platform with a second person present, keep clear of overhead power lines, and use only poles whose owner permits the added wind load. Deburr the aluminium sign panel's edges.
+> **Safety:** The sign option is work at height on a street pole. Use a stable platform with a second person present, keep clear of overhead power lines, and use only poles whose owner permits the added wind load. Deburr the aluminium sign panel's edges. The prototype legend is a placeholder: before a sign is mounted on a street, its legend is drawn to the trial city's sign rules (in the US, the MUTCD) and approved by the city traffic engineer (LDZ-DEC-001, item 6).
 
 ## Open questions
 
@@ -155,5 +161,5 @@ Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendat
 - [x] Gateway spacing: a gateway within 300 m of each bay (R4 restated, LDZ-DDR-002).
 - [x] Bond: two-part road-marker epoxy, with R6 restated (LDZ-DDR-002).
 - [x] Sign: daylight-only target, on a private network server (LDZ-DDR-002).
-- [ ] Which city, business district or carrier would host a first trial, and on which LoRaWAN band (O1)? Proposed, awaiting Amish. If US915, the payload is packed to 11 bytes (decided).
-- [ ] Snow and plows: can a surface puck survive where roads are plowed, or is a cored variant required in those climates?
+- [x] First trial partner and band (O1). Decided by Amish, 2026-10-02 (LDZ-DEC-001, item 2): the first candidate type to approach, not yet agreed, is a city curb-management or transportation team that has published or piloted the Curb Data Specification, in a city without routine snow plowing; US915 by default, with the 11-byte payload.
+- [x] Snow and plows. Decided by Amish, 2026-10-02 (LDZ-DEC-001, item 7): the surface puck is not for plowed streets; a cored, in-ground version is a later option.

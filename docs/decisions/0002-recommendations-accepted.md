@@ -3,9 +3,9 @@ doc_id: LDZ-DDR-002
 title: LoadZone recommendations accepted
 project: LoadZone
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's acceptance of all recommendations and what changed in the repo
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 decided by Amish on 2026-10-02 as recommended in LDZ-DEC-001
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Every item below marked "Decided" is decided by Amish, 2026-09-25: go with recommendation. Items without a recommendation remain "Proposed, awaiting Amish".
+- **Status:** accepted. Every item below marked "Decided" is decided by Amish, 2026-09-25: go with recommendation. The item without a recommendation (O1) was given one in the design decisions register (LDZ-DEC-001, item 2) and decided by Amish on 2026-10-02: "i approve your recommendations for all 555 open decisions."
 
 ## Context
 
@@ -40,11 +44,11 @@ After the TRL 3 session, LoadZone had eight items adopted for TRL 3 work pending
 
 LDZ-CAL-001 v0.2 also takes FieldNode's published 100 mW sensor allowance (FND-DDR-002) in place of the earlier 115 mW and 100 mW pair; the sign's 17.7 mW is 18 % of it, and R12 stays met on paper.
 
-*Table 2. Items still open.*
+*Table 2. Item left open by this record, decided on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First trial partner (a city curb team, a business district or a carrier) and the LoRaWAN band. No recommendation was made. | Proposed, awaiting Amish |
+| O1 | First trial partner (a city curb team, a business district or a carrier) and the LoRaWAN band. No recommendation was made. | **Decided by Amish, 2026-10-02:** first candidate type to approach (not yet agreed), a city curb-management or transportation team that has published or piloted the Curb Data Specification, in a city without routine snow plowing; US915 is the default band, since the 11-byte payload already fits it (LDZ-DEC-001, item 2) |
 
 The suggestion in `docs/REVIEW.md` that CurbCount and LoadZone could share one server and data feed through CityTwin was a suggestion, not a recommendation awaiting decision, and is not adopted.
 

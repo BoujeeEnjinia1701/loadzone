@@ -3,9 +3,9 @@ doc_id: LDZ-REQ-001
 title: LoadZone requirements
 project: LoadZone
 doc_type: Requirements
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Constructable design (LDZ-DDR-003); R13 reported against the value-engineering target
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Band assumption: US915 by default (LDZ-DEC-001, item 2, decided 2026-10-02); no status changed'
 ---
 
 # LoadZone requirements
@@ -67,5 +71,5 @@ No requirement is now not met. Before LDZ-DDR-002, R4 (1 km) and R11 (night) wer
 
 - A vehicle slot is about 7 m long and the puck sits near its center, 1.3 m from the curb face (estimates; bay layouts vary by city).
 - Loading bay turnover of up to 50 vehicles a slot a day, or 100 state changes, based on most delivery stops lasting 30 minutes or less ([Urban Freight Lab, 2019](https://urbanfreightlab.com/publications/the-final-50-feet-of-the-urban-goods-delivery-system-tracking-curb-use-in-seattle/)).
-- Each 12-byte LoRaWAN uplink costs about 14.2 mA·s at SF9 with FieldNode's radio currents (LDZ-CAL-001). If the band is US915, the payload is packed to 11 bytes (LDZ-DDR-002); the band is still open.
+- Each 12-byte LoRaWAN uplink costs about 14.2 mA·s at SF9 with FieldNode's radio currents (LDZ-CAL-001). US915 is the default band (LDZ-DEC-001, item 2, decided 2026-10-02), so the payload is packed to 11 bytes (LDZ-DDR-002); LDZ-CAL-001 still uses EU868 figures until it is rerun.
 - The wheel load is half of a 10 t single axle (49 kN); a vehicle parked inside the bay lines straddles the puck, so wheel loads come from maneuvering (LDZ-CAL-001, section 7).

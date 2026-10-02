@@ -268,3 +268,49 @@ All are in `docs/06-design-decisions.md`. New this session: acceptance of LDZ-DD
 ### Recommended next step
 
 Amish's review of LDZ-DDR-003 and the open decisions in LDZ-DEC-001, then the product model and renders updated on the Mac. TRL 4 (building to this plan) remains on hold.
+
+## Session 2026-10-02: open decisions decided
+
+On 2026-10-02 Amish approved every recommendation written for the open decisions: "i approve your recommendations for all 555 open decisions." trl stays 3; nothing was built or tested.
+
+### Decisions recorded
+
+10 decisions recorded in the design decisions register (LDZ-DEC-001, Decisions made, dated 2026-10-02): LDZ-DDR-003 accepted as made (1); first partner type and US915 as the default band (2), the first candidate to approach and not an agreed partner; sealed-for-life puck with over-the-air updates at TRL 4 (3); printed ASA tray sanded with 80 grit (4); button heads on the sign face (5); placeholder legend until the city is chosen, then the city's rules and traffic engineer approval (6); surface puck only, not for plowed streets, cored version later (7); dome detail appearance only (8); amber potting a render convention (9); render layout accepted with FieldNode in the caption (10).
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (LDZ-DEC-001 v0.2): all 10 open items moved to Decisions made; Open decisions now reads "None"; item 7 of "To confirm when parts are bought" updated for the tray material.
+- `docs/decisions/0003-design-for-construction.md` (LDZ-DDR-003 v0.2): status line and Table 3 record acceptance of Tables 1 and 2 and A1 to A3; status stays Draft.
+- `docs/decisions/0002-recommendations-accepted.md` (LDZ-DDR-002 v0.2): O1 recorded as decided.
+- `docs/decisions/0001-trl2-review-decisions.md` (LDZ-DDR-001 v0.3): O1 recorded as decided.
+- `docs/02-concept.md` (LDZ-PRC-001 v0.6): surface puck not for plowed streets; sealed for life; US915 default; partner; legend rule before street mounting; open questions closed.
+- `docs/01-problem.md` (LDZ-PRB-001 v0.5): first partner type; surface puck not for plowed streets.
+- `docs/03-requirements.md` (LDZ-REQ-001 v0.6): band assumption updated to US915 by default; no status changed.
+- `docs/05-build-plan.md` (LDZ-BLD-001 v0.2): sign face: placeholder legend and the approval rule before street mounting.
+- `project.yaml`, `README.md` and `CITATION.cff`: pitch reworded to "A curbside loading bay occupancy sensor for streets that are not plowed: ..."; README safety and build sections updated.
+- `bom/bom-notes.md`: decided material and part choices noted; the line 4 band change is a follow-up.
+- PDFs re-rendered with `python .kit/render.py`; superseded versions removed.
+
+No CAD model, BOM quantity or price, or picture was changed. Requirement status is unchanged: none not met, R1, R5 and R6 at risk, R14 not verifiable at TRL 3.
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 2 (bom): Change BOM line 4 (antenna) to the US915 band and check its price.
+2. Decision 2 (calcs): Rerun LDZ-CAL-001 airtime, latency and duty-cycle figures (sections on airtime and latency, R2, R3, R5) for US915 rules with the 11-byte payload, replacing the EU868 figures.
+3. Decision 3 (docs): Plan over-the-air firmware updates in the TRL 4 work list when TRL 4 is opened (not now; TRL 4 is on hold).
+4. Decision 6 (pictures): Draw the sign legend to the trial city's sign rules (MUTCD in the US) once the city is chosen, and update BOM line 8 and the sign renders.
+5. Decision 10 (pictures): Add a mention of the host FieldNode to the render captions (`media/render-*.png`) when the renders are next made on Amish's Mac.
+6. Decision 1 (pictures): Update `cad/src/product_model.py` and the photoreal renders, `media/card.png` and `media/social-preview.png`, which still show the concept's ring clamps on the sign.
+
+### Points found in the review
+
+- The value-engineering section prices the host FieldNode at USD 126; FieldNode's constructable design is now USD 139 (FieldNode concept and NoiseMap register).
+- Item 7 is effectively a scope statement for the pitch: the product as designed cannot be used where streets are ploughed.
+
+### Safety
+
+The surface puck is now stated not to be for plowed streets. A sign must not go on a street until its legend follows the city's sign rules and the city traffic engineer has approved it. The road-work, lithium cell and resin warnings are unchanged.
+
+### Recommended next step
+
+Rerun the radio calculations for US915 and update BOM line 4. TRL 4 remains on hold by Amish's instruction.

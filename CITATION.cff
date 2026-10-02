@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use or build on this design, please cite it as below."
 type: software
 title: "LoadZone"
-abstract: "A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use."
+abstract: "A curbside loading bay occupancy sensor for streets that are not plowed: it shows delivery drivers which bays are free and gives cities data on curb use."
 authors:
   - given-names: Amish
     family-names: Chadha

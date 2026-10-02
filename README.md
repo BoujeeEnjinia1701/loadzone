@@ -4,7 +4,7 @@
 
 **Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 120 (estimated cost USD 116) · **Difficulty:** 2 of 5
 
-A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
+A curbside loading bay occupancy sensor for streets that are not plowed: it shows delivery drivers which bays are free and gives cities data on curb use.
 
 ![LoadZone: loading bay occupancy sensor puck and driver sign, product render](media/render-hero.png)
 
@@ -56,7 +56,7 @@ Delivery vehicles double-park when loading bays are occupied or unknown, blockin
 
 ## Concept
 
-A curbside loading bay occupancy sensor that shows delivery drivers which bays are free and gives cities data on curb use.
+A curbside loading bay occupancy sensor for streets that are not plowed: it shows delivery drivers which bays are free and gives cities data on curb use.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
@@ -77,13 +77,13 @@ The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
 ![LoadZone prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 
-The [prototype build plan](docs/05-build-plan.md) (LDZ-BLD-001) shows, in pictures, how to make each of the eleven components and put them together in nine steps; nothing has been built yet. Each puck is a polyurethane dome cast in a home-made silicone mould with a printed core, on a printed base tray that holds the cells, radio board and antenna; the puck is then potted solid through a hole in the tray and bonded to a test slab. The sign option is a bought sign face and display housing on two aluminium channel brackets with band clamps. Writing the plan made the design buildable: the base became a tray with a locating ring, fill and vent holes and holders for every part, the dome got a real casting process, and the sign's solid ring clamps became brackets and bands (LDZ-DDR-003, open for Amish's review). Every picture is drawn from the model, which checks that each part touches what it should and clears what it should not.
+The [prototype build plan](docs/05-build-plan.md) (LDZ-BLD-001) shows, in pictures, how to make each of the eleven components and put them together in nine steps; nothing has been built yet. Each puck is a polyurethane dome cast in a home-made silicone mould with a printed core, on a printed base tray that holds the cells, radio board and antenna; the puck is then potted solid through a hole in the tray and bonded to a test slab. The sign option is a bought sign face and display housing on two aluminium channel brackets with band clamps. Writing the plan made the design buildable: the base became a tray with a locating ring, fill and vent holes and holders for every part, the dome got a real casting process, and the sign's solid ring clamps became brackets and bands (LDZ-DDR-003, accepted by Amish on 2026-10-02). Every picture is drawn from the model, which checks that each part touches what it should and clears what it should not.
 
 ## Safety
 
 > Street furniture and pole mounts must be installed only with the asset owner's permission, by trained crews, with fall protection and traffic management as local rules require.
 >
-> Pucks are installed in the roadway: work only under a road permit and traffic management. The pucks contain primary lithium thionyl chloride cells: never recharge, short, crush or heat them. Road-marker adhesives and polyurethane casting resins are hazardous; follow their safety data sheets.
+> Pucks are installed in the roadway: work only under a road permit and traffic management. The pucks contain primary lithium thionyl chloride cells: never recharge, short, crush or heat them. Road-marker adhesives and polyurethane casting resins are hazardous; follow their safety data sheets. The surface puck is not for plowed streets, and a sign's legend must follow the city's sign rules and be approved by its traffic engineer before it goes on a street.
 
 ## Repository layout
 

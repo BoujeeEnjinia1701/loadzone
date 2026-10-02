@@ -3,9 +3,9 @@ doc_id: LDZ-PRB-001
 title: LoadZone problem statement
 project: LoadZone
 doc_type: Problem statement
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: First partner type and scope for plowed streets decided on 2026-10-02 (LDZ-DEC-001, items 2 and 7)
 ---
 
 # LoadZone problem statement
@@ -77,13 +81,13 @@ What is missing is an open, inspectable bay sensor that a small city or a commun
 - Payment, booking or reservation of bays (the data can feed such systems later).
 - Enforcement actions or identifying vehicles; LoadZone never reads number plates.
 - Passenger car parking guidance at scale (the same puck could do it, but it is not the target).
-- In-ground (cored) installation, which needs road works; noted as a later variant.
+- In-ground (cored) installation, which needs road works; recorded as a later option (LDZ-DEC-001, item 7). The surface puck is not for plowed streets.
 
 ## User research and co-design
 
 This design is for communities the author is not part of, so requirements come from the people who will use it.
 
-- [ ] Identify a local partner organization (Helpful Engineering network, NGO or university)
+- [ ] Identify a local partner organization. Decided by Amish, 2026-10-02 (LDZ-DEC-001, item 2): the first candidate type to approach, not yet agreed, is a city curb-management or transportation team that has published or piloted the Curb Data Specification, in a city without routine snow plowing
 - [ ] Run co-design sessions with intended users; record who, where and what was learned
 - [ ] Validate load, distance, terrain and cost assumptions in the field
 - [ ] Revise requirements (REQ) from findings before freezing the design

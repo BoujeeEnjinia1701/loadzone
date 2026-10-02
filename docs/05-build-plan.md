@@ -3,9 +3,9 @@ doc_id: LDZ-BLD-001
 title: LoadZone prototype build plan
 project: LoadZone
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: First build plan, with pictures by component and step; design made constructable (LDZ-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Sign legend: placeholder for the prototype; drawn to the city''s rules and approved by its traffic engineer before street mounting (LDZ-DEC-001, item 6)'
 ---
 
 # LoadZone prototype build plan
@@ -252,7 +256,7 @@ The web lies flat on the back of the sign face, 100 mm from its top or bottom ed
 
 *Figure 17. Every hole on the sign face, seen from the printed side.*
 
-**What it is and what it is made from.** The "Loading zone" sign: an aluminium composite panel, 450 x 600 x 3 mm, bought from a sign maker with the legend printed.
+**What it is and what it is made from.** The "Loading zone" sign: an aluminium composite panel, 450 x 600 x 3 mm, bought from a sign maker with the legend printed. For the workshop prototype the legend is a placeholder; a sign for a street gets a legend drawn to the trial city's sign rules (in the US, the MUTCD) and approved by the city traffic engineer before it is mounted.
 
 **How to make it.**
 
