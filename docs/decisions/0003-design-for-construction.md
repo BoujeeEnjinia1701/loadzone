@@ -3,7 +3,7 @@ doc_id: LDZ-DDR-003
 title: LoadZone design for construction
 project: LoadZone
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Accepted by Amish on 2026-10-02, including the recommendations for A1 to A3
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Appearance model updated to the constructable sign brackets and puck internals; renders remain for the Mac
 ---
 
 # 0003: Design for construction
@@ -68,5 +72,5 @@ The changes keep what LoadZone does: the same puck outside (150 mm across, 31 mm
 - `design_state: constructable` in `project.yaml`. The build plan LDZ-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`); open items are in the design decisions register LDZ-DEC-001.
 - With A1 to A3 accepted, the puck is sealed for life with over-the-air updates planned for TRL 4, the base tray is printed ASA sanded with 80 grit (cast polyurethane if the TRL 4 pull-off test fails on the tray side), and the sign face shows button heads.
 - Requirement status is unchanged: none not met, 3 at risk (R1, R5, R6), 1 not verifiable at TRL 3 (R14), 7 met on paper, 4 met by design (LDZ-CAL-001 v0.3). R13 is now reported against the value-engineering target: USD 4.00 under it.
-- The appearance model `cad/src/product_model.py` and the photoreal renders (`media/render-*.png`), with `media/card.png` and `media/social-preview.png`, still show the concept's ring clamps on the sign; they need updating on Amish's Mac, where Blender is. The puck's outside is unchanged.
+- The appearance model `cad/src/product_model.py` now draws the channel brackets, band clamps and button-head bolts of this record and the moved cells and antenna, taken from the model (2026-10-02). The photoreal renders, `media/card.png` and `media/social-preview.png` are made next on Amish's Mac, where Blender is. The puck's outside is unchanged.
 - The display enclosure, the e-paper driver board and the band clamps are chosen at TRL 4; their sizes must be checked then and the holes moved to suit (LDZ-DEC-001, items to confirm).

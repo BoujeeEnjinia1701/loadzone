@@ -1,4 +1,4 @@
-"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P3).
+"""LoadZone general arrangement drawing LDZ-DWG-001 (Rev P4).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/LDZ-DWG-001.svg, .pdf and .png from the parametric model.
@@ -20,11 +20,12 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="LoadZone", title="General arrangement, bay sensor puck", dwg_no="LDZ-DWG-001",
-          rev="P3", author="Amish Chadha", date="2026-10-01", concept=True,
+          rev="P4", author="Amish Chadha", date="2026-10-02", concept=True,
           material="Dome rigid cast PU, yellow; PU potting; printed ASA base tray; two-part road-marker epoxy bed. See bom/bom.csv",
           revisions=[("P1", "Preliminary GA from LDZ-CAL-001 v0.1", "2026-09-25", "AC"),
                      ("P2", "Epoxy bed; notes per LDZ-DDR-002", "2026-09-25", "AC"),
-                     ("P3", "Base tray, cradles, fill and vents (LDZ-DDR-003)", "2026-10-01", "AC")])
+                     ("P3", "Base tray, cradles, fill and vents (LDZ-DDR-003)", "2026-10-01", "AC"),
+                     ("P4", "Figures per LDZ-CAL-001 v0.4 (US915); decisions of 2026-10-02 carried in", "2026-10-02", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 30, 140, 84, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [

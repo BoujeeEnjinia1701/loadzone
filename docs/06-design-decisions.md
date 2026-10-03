@@ -3,7 +3,7 @@ doc_id: LDZ-DEC-001
 title: LoadZone design decisions register
 project: LoadZone
 doc_type: Design decisions register
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: Amish approved the recommendations of open items 1 to 10 on 2026-10-02; all moved to decisions made; tray bond line to confirm updated
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Value engineering: host FieldNode priced at USD 139.50 (FND-CAL-001)'
 ---
 
 # LoadZone design decisions register
@@ -41,7 +45,7 @@ None. All open decisions were decided on 2026-10-02.
 
 ## Value engineering
 
-Value-engineering target: USD 120 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 116 for the two-puck kit (USD 4 under the target). The sign option (USD 101) and its host FieldNode (USD 126, priced in the FieldNode repo) are costed separately, and the one-off dome casting tooling (USD 35) is not part of the per-kit cost. Main cost drivers and savings worth trying:
+Value-engineering target: USD 120 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 116 for the two-puck kit (USD 4 under the target). The sign option (USD 101) and its host FieldNode (USD 139.50, priced in the FieldNode repo) are costed separately, and the one-off dome casting tooling (USD 35) is not part of the per-kit cost. Main cost drivers and savings worth trying:
 
 - The largest lines, for two pucks, are the radio module and board (USD 28), the cell sets with diodes and pulse capacitor (USD 28), the magnetometer breakouts (USD 16), the base trays and potting (USD 12) and the domes (USD 10).
 - Making the design constructable added USD 2 to the kit (sealant, screws and mould release in line 12) and USD 4 to the sign option (the channel brackets); the tooling is new.

@@ -1,4 +1,4 @@
-"""LoadZone sizing calculations, LDZ-CAL-001 v0.3 (TRL 3, LDZ-DDR-002 and LDZ-DDR-003 applied).
+"""LoadZone sizing calculations, LDZ-CAL-001 v0.4 (TRL 3, LDZ-DDR-002 and LDZ-DDR-003 applied; US915 default band, LDZ-DEC-001 item 2).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md (tags in brackets, for example
@@ -39,11 +39,12 @@ SAMPLE_S = 1.0           # magnetometer sampling period, s
 BACKEND_S = 2.0          # gateway to network server to LoadZone service, s (assumed)
 LATENCY_REQ = 60.0       # s (R2)
 # Radio (same core and figures as FND-CAL-001)
-PAYLOAD, OVERHEAD = 12, 13
+PAYLOAD, OVERHEAD = 11, 13          # US915 default band (LDZ-DEC-001 item 2): payload packed to 11 bytes
 BW, CR, NPRE = 125e3, 1, 8
 TTN_S = 30.0             # s uplink per node per day (TTN fair use, checked 2026-09-25)
 TTN_DL = 10              # downlinks per node per day (TTN fair use, checked 2026-09-25)
-EU_DC = 0.01             # EU868 g1 sub-band duty cycle (default channels)
+DWELL_MAX = 0.400        # s, US915 (FCC 15.247) maximum dwell time per transmission on a 125 kHz channel; no duty cycle
+SFS = (7, 8, 9, 10)      # US915 125 kHz uplink data rates DR3 to DR0; SF11 and SF12 are not offered
 I_TX, I_RX, I_MCU = 45e-3, 4.6e-3, 8e-3     # A: SX1262 at +14 dBm, receive, controller awake
 T_RX, N_RX, T_AWAKE = 0.10, 2, 0.5          # s per RX window, windows per uplink, awake per uplink
 I_SLEEP = 6e-6           # A: module stop mode, magnetometer idle, leakage
@@ -54,7 +55,7 @@ ANT_PUCK = -2.0          # dBi, small flexible antenna inside a potted dome (ass
 ANT_GW, LOSS_GW = 2.0, 2.0
 NF = 6.0
 SNR_LIM = {7: -7.5, 8: -10.0, 9: -12.5, 10: -15.0, 11: -17.5, 12: -20.0}
-F_GHZ = 0.868
+F_GHZ = 0.915
 H_GW = 10.0              # m, gateway on a pole or low roof in a street canyon (3GPP UMi)
 GROUND_LOSS = 10.0       # dB, antenna about 25 mm above the road (estimate)
 VEH_LOSS = (10.0, 20.0)  # dB, vehicle parked over the puck, typical and worst (estimate, TRL 2)
@@ -113,7 +114,7 @@ def toa(sf, pl=PAYLOAD + OVERHEAD, bw=BW):
 
 ups = CHANGES + 24 / HEARTBEAT_H
 air = {}
-for sf in range(7, 13):
+for sf in SFS:
     t = toa(sf)
     per_day = t * ups
     hb_room = (TTN_S - CHANGES * t) / t
@@ -123,11 +124,10 @@ for sf in range(7, 13):
     out("A1", f"SF{sf}: {t * 1000:.1f} ms per {PAYLOAD}-byte uplink; {per_day:.1f} s/day at {ups:.0f} uplinks; "
               f"within {TTN_S:.0f} s: {hb_txt}; at most {max_changes:.0f} uplinks a day")
 US915_MAX_SF10 = 11      # bytes, largest application payload at the slowest US915 125 kHz rate (SF10)
-PAYLOAD_US = 11          # bytes, packed payload if the band is US915 (DDR-002 firmware rule)
-out("A2", f"US915 rule: payload packed to {PAYLOAD_US} bytes (limit {US915_MAX_SF10} at SF10): {toa(10, PAYLOAD_US + OVERHEAD) * 1000:.1f} ms at SF10; "
-          f"the band is still open (O1), so EU868 figures with {PAYLOAD} bytes are used below")
-res("R5", f"{air[7][1]:.1f} s/day at SF7, {air[8][1]:.1f} at SF8, {air[9][1]:.1f} at SF9, {air[10][1]:.1f} at SF10, "
-          f"{air[12][1]:.1f} at SF12 ({ups:.0f} uplinks)", "30 s/day or less", "At risk (met at SF7 to SF9; not met at SF10 to SF12)")
+out("A2", f"US915 rule: {PAYLOAD}-byte payload (limit {US915_MAX_SF10} at SF10): {toa(10) * 1000:.1f} ms at SF10 against the {DWELL_MAX * 1000:.0f} ms dwell limit "
+          f"({'inside' if toa(10) <= DWELL_MAX else 'OVER'}); the 12-byte EU868 payload would be {toa(10, 12 + OVERHEAD) * 1000:.1f} ms; no duty cycle applies")
+res("R5", f"{air[7][1]:.1f} s/day at SF7, {air[8][1]:.1f} at SF8, {air[9][1]:.1f} at SF9, {air[10][1]:.1f} at SF10 "
+          f"({ups:.0f} uplinks; SF11 and SF12 are not offered in US915)", "30 s/day or less", "At risk (met at SF7 to SF9; not met at SF10)")
 
 # =============================================================== B. Energy and cell life (R3)
 q_up = {sf: I_TX * air[sf][0] + I_RX * T_RX * N_RX + I_MCU * T_AWAKE for sf in air}   # A s
@@ -136,7 +136,7 @@ q_samp = (I_SAMPLE * T_SAMPLE / SAMPLE_S) * 86400
 usable = CELL_AH * N_CELLS * (1 - DERATE)
 out("B1", f"sleep {q_sleep / 3.6:.3f} mAh/day; sampling {I_SAMPLE * T_SAMPLE / SAMPLE_S * 1e6:.0f} uA avg = {q_samp / 3.6:.3f} mAh/day")
 life = {}
-for sf in (7, 9, 10, 12):
+for sf in (7, 9, 10):
     day = (q_sleep + q_samp + q_up[sf] * ups) / 3.6       # mAh/day
     yr = day * 365 / 1000                                  # Ah/yr
     life[sf] = usable / yr
@@ -145,10 +145,10 @@ for sf in (7, 9, 10, 12):
 out("B3", f"usable capacity {CELL_AH * N_CELLS:.1f} Ah nameplate x {1 - DERATE:.2f} = {usable:.2f} Ah; "
           f"share of the SF9 budget: sampling {q_samp / (q_sleep + q_samp + q_up[9] * ups):.0%}, "
           f"uplinks {q_up[9] * ups / (q_sleep + q_samp + q_up[9] * ups):.0%}")
-res("R3", f"{life[9]:.1f} years at SF9 ({life[7]:.1f} at SF7, {life[12]:.1f} at SF12) with 40 % derating",
+res("R3", f"{life[9]:.1f} years at SF9 ({life[7]:.1f} at SF7, {life[10]:.1f} at SF10) with 40 % derating",
     "5 years or more at 100 changes a day plus hourly heartbeats", "Met on paper" if life[9] >= LIFE_REQ else "Not met")
 
-for sf in (9, 12):
+for sf in (9, 10):
     c = I_TX * air[sf][0] / DROOP
     out("B4", f"pulse capacitor, SF{sf}: {I_TX * air[sf][0] * 1000:.1f} mC per uplink; {c * 1000:.0f} mF if the capacitor alone "
               f"supplies it with {DROOP} V droop")
@@ -156,17 +156,16 @@ out("B5", f"supply: fresh cells {V_OCV} V open circuit against {V_MOD_MAX} V mod
           f"branch {V_OCV - V_DIODE:.2f} V, which also stops one cell charging the other")
 
 # =============================================================== C. Latency (R2)
-for sf in (9, 10, 11, 12):
-    off = air[sf][0] * (1 / EU_DC - 1)
-    worst = DEBOUNCE + SAMPLE_S + off + air[sf][0] + BACKEND_S
+for sf in (7, 8, 9, 10):
+    worst = DEBOUNCE + SAMPLE_S + air[sf][0] + BACKEND_S
     typ = DEBOUNCE + SAMPLE_S / 2 + air[sf][0] + BACKEND_S
-    out("C1", f"SF{sf}: typical {typ:.1f} s; worst {worst:.1f} s including a {off:.1f} s EU868 duty-cycle wait after the previous uplink")
+    out("C1", f"SF{sf}: typical {typ:.1f} s; worst {worst:.1f} s (US915 has no duty-cycle wait; one retry on another channel adds about {air[sf][0] + 1:.1f} s)")
     if sf == 9:
         lat9 = (typ, worst)
     if sf == 10:
         lat10 = worst
-res("R2", f"typical {lat9[0]:.1f} s; worst {lat9[1]:.1f} s at SF9, {lat10:.1f} s at SF10; over 60 s at SF11 and SF12",
-    "60 s or less", "Met on paper (SF10 or faster)")
+res("R2", f"typical {lat9[0]:.1f} s; worst {lat9[1]:.1f} s at SF9, {lat10:.1f} s at SF10; no duty-cycle wait in US915",
+    "60 s or less", "Met on paper")
 
 # =============================================================== D. Link (R4), 3GPP TR 38.901 UMi street canyon
 def umi(d_km, h_ut=1.5, h_bs=H_GW, fc=F_GHZ):
@@ -184,7 +183,7 @@ eirp = TX_DBM - LOSS_NODE + ANT_PUCK
 los1, nlos1 = umi(D_REQ)
 out("D1", f"EIRP {eirp:.1f} dBm; UMi path loss at {D_REQ:.0f} km, gateway {H_GW:.0f} m: LOS {los1:.1f} dB, NLOS {nlos1:.1f} dB; "
           f"road-level loss {GROUND_LOSS:.0f} dB, vehicle {VEH_LOSS[0]:.0f} to {VEH_LOSS[1]:.0f} dB")
-for sf in (9, 12):
+for sf in (9, 10):
     sens = -174 + 10 * math.log10(BW) + NF + SNR_LIM[sf]
     budget = eirp + ANT_GW - LOSS_GW - sens
     extra = GROUND_LOSS + VEH_LOSS[0]
@@ -299,9 +298,9 @@ digit = PANEL_H_MM * DIGIT_FRAC
 dist = digit * LI_M_PER_MM
 out("H4", f"digit {digit:.0f} mm on a {PANEL_H_MM} mm panel; legibility index {LI_M_PER_MM:.2f} m per mm -> {dist:.1f} m by day at full contrast; "
           f"digit needed for {LEGIBLE_REQ:.0f} m: {LEGIBLE_REQ / LI_M_PER_MM:.0f} mm")
-t_dl = toa(9, DL_PAYLOAD + OVERHEAD)
+t_dl = toa(12, DL_PAYLOAD + OVERHEAD, bw=500e3)   # US915 RX2 is DR8: SF12 on 500 kHz
 out("H5", f"downlinks: {SIGN_CHANGES}/day against TTN's {TTN_DL}/day; on a private gateway {SIGN_CHANGES} x {t_dl * 1000:.0f} ms "
-          f"= {SIGN_CHANGES * t_dl:.0f} s/day at SF9 in RX2, {SIGN_CHANGES * t_dl / 86400 / 0.10:.2%} of the 10 % sub-band allowance")
+          f"= {SIGN_CHANGES * t_dl:.0f} s/day at SF12 on 500 kHz (US915 RX2), with no duty-cycle limit")
 res("R11", f"about {dist:.0f} m by day at full contrast ({digit:.0f} mm digits); unlit at night, as restated", f"{LEGIBLE_REQ:.0f} m by day (daylight only, DDR-002)",
     "Met on paper" if dist >= LEGIBLE_REQ else "Not met")
 res("R12", f"{drawn:.2f} Wh/day drawn ({avg_mw:.1f} mW) against 2.40 Wh/day (100 mW)", "Within the host FieldNode allowance",
@@ -331,7 +330,7 @@ res("R13", f"${core:.2f} for two pucks, ${abs(diff):.2f} {'under' if diff >= 0 e
 # =============================================================== J. Design-review items
 res("R8", "Cells -55 to +85 C, magnetometer and module -40 to +85 C class; pulse capacitor must be an 85 C hybrid type; fully potted",
     "IP68; -25 to +70 C road surface; salt, oil, fuel", "Met by design (sealing not verifiable at TRL 3)")
-res("R9", "Magnetometer only; 12-byte payload of state, timer, confidence, voltage, temperature", "No images, audio or identifiers", "Met by design")
+res("R9", "Magnetometer only; 11-byte payload of state, timer, confidence, voltage, temperature", "No images, audio or identifiers", "Met by design")
 res("R10", "park_start, park_end, scheduled_report, comms_lost and comms_restored map onto CDS Events; occupancy and dwell onto Metrics",
     "Open API mapping onto CDS Events and Metrics", "Met by design")
 res("R14", "Bonded pad, no road cutting; time depends on the adhesive", "15 min per puck, two-person crew", "Not verifiable at TRL 3")

@@ -3,7 +3,7 @@ doc_id: LDZ-PRC-001
 title: LoadZone design precis
 project: LoadZone
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Decisions of 2026-10-02 carried in (LDZ-DEC-001 items 2 to 7): partner and US915, sealed for life, ASA tray, button heads, legend approval rule, surface puck only and not for plowed streets'
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Radio figures rerun for US915 with the 11-byte payload (LDZ-CAL-001 v0.4): airtime, latency, cell life, link; antenna at 915 MHz; no requirement status changed'
 ---
 
 # LoadZone design precis
@@ -49,7 +53,7 @@ Figure 1. Concept massing model in a two-slot loading bay: the free slot (teal) 
 
 1. **Sense.** Each puck wakes about once a second and takes a single magnetometer reading. With no vehicle, the reading is the local Earth field plus a fixed offset learned at install. A car or van parked above distorts the field by several microtesla (estimate), mostly in the vertical axis.
 2. **Decide.** Firmware compares the field change with an adaptive threshold and requires the new state to hold for about 15 s before accepting it, so traffic passing in the next lane and vehicles pausing briefly do not count. The baseline is re-learned slowly while the slot is free, to follow temperature drift and road works nearby.
-3. **Report.** On each confirmed change, and hourly as a heartbeat, the puck sends a 12-byte LoRaWAN uplink: slot state, time since the last change, a confidence value, cell voltage and temperature. If the band is US915, the payload is packed to 11 bytes so that it fits the slowest US915 rate (LDZ-DDR-002). No raw magnetic data leave the device by default.
+3. **Report.** On each confirmed change, and hourly as a heartbeat, the puck sends an 11-byte LoRaWAN uplink: slot state, time since the last change, a confidence value, cell voltage and temperature. The payload is packed to 11 bytes so that it fits the slowest US915 rate (LDZ-DDR-002), and US915 is the default band. No raw magnetic data leave the device by default.
 4. **Aggregate.** A LoRaWAN network server (TwinKit, The Things Network or a city network) passes uplinks to a small open service that keeps bay state, computes occupancy and dwell time, and publishes them in a form that maps onto the Curb Data Specification Events and Metrics APIs ([Open Mobility Foundation](https://www.openmobilityfoundation.org/about-cds/)).
 5. **Show (option).** A FieldNode on a nearby pole, running as a LoRaWAN class C device, receives a short downlink when the bay state changes and redraws a 7.5 in e-paper panel set into a "Loading zone" sign: the number of free slots and an arrow. The same state can appear in carriers' routing tools and city maps through the data feed.
 
@@ -66,7 +70,7 @@ Table 1. Components (numbers match `bom/bom.csv` and Figure 3)
 | 1 | Puck dome | Rigid cast polyurethane, high-visibility yellow, 150 mm base diameter, 104 mm crown with a 6 mm radius, 31 mm total height, radio-transparent |
 | 2 | Magnetometer | 3-axis, 16-bit, LIS2MDL class, on a small breakout ([STMicroelectronics](https://www.st.com/en/mems-and-sensors/lis2mdl.html)) |
 | 3 | Controller and radio | STM32WL-class LoRaWAN module on a small carrier, the same core as FieldNode |
-| 4 | Antenna | Flexible PCB antenna for 868 or 915 MHz, fixed inside the dome wall, above the cells |
+| 4 | Antenna | Flexible PCB antenna for 915 MHz (US915 default band), fixed inside the dome wall, above the cells |
 | 5 | Cells | Two AA-size Li-SOCl2 bobbin cells (about 2.6 Ah each, typical rating) in parallel through one Schottky diode each, with an 85 °C hybrid pulse capacitor to supply transmit current |
 | 6 | Base and potting | Printed 150 x 6 mm base tray with a ring that locates the dome, cradles for the cells, standoffs for the board and a rib for the antenna; the dome cavity is fully potted in semi-rigid polyurethane through a fill hole in the tray, and the potting carries wheel loads through to the base (LDZ-DDR-003) |
 | 7 | Road-marker epoxy bed | Two-part road-marker epoxy, as used for raised pavement markers, as a 170 mm bed about 3 mm thick (LDZ-DDR-002; a bitumen pad is no longer used) |
@@ -98,17 +102,17 @@ Table 2. Puck energy budget at SF9
 | Uplinks | 0.488 mAh/day | 100 state changes and 24 heartbeats, 14.2 mA·s each at SF9 |
 | Total | 1.11 mAh/day, 0.406 Ah/year | Sum of the above |
 | Usable cell capacity | 3.12 Ah | 2 x 2.6 Ah, derated 40 % for cold, pulse loads and self-discharge |
-| Cell life | 7.7 years | 9.6 years at SF7, 6.0 at SF10, 2.8 at SF12; R3 asks for 5 years |
+| Cell life | 7.7 years | 9.6 years at SF7, 6.2 at SF10; R3 asks for 5 years |
 
-**Airtime.** A 12-byte uplink is on air for 61.7 ms at SF7 and 205.8 ms at SF9. At 124 uplinks a day that is 7.7 s at SF7 and 25.5 s at SF9, within The Things Network's 30 s fair-use limit ([TTN](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle/)), but 51.0 s at SF10. Pucks must therefore sit within SF9 reach of a gateway (R5 at risk).
+**Airtime.** An 11-byte uplink is on air for 61.7 ms at SF7, 205.8 ms at SF9 and 370.7 ms at SF10, inside the 400 ms US915 dwell limit. At 124 uplinks a day that is 7.7 s at SF7 and 25.5 s at SF9, within The Things Network's 30 s fair-use limit ([TTN](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle/)), but 46.0 s at SF10 (SF11 and SF12 are not offered on US915 uplinks). Pucks must therefore sit within SF9 reach of a gateway (R5 at risk).
 
-**Latency.** A 15 s debounce, up to 1 s of sampling and about 2 s of network path give 17.7 s typically; the EU868 duty-cycle wait after a previous uplink raises the worst case to 38.6 s at SF9 and 59.2 s at SF10, within R2's 60 s.
+**Latency.** A 15 s debounce, up to 1 s of sampling and about 2 s of network path give 17.7 s typically; US915 has no duty-cycle wait, so the worst case is 18.2 s at SF9 and 18.4 s at SF10, well within R2's 60 s.
 
-**Pulse supply.** One SF9 uplink draws 9.3 mC, which a capacitor alone would supply with 0.3 V of droop at 31 mF (222 mF at SF12). Fresh cells sit at about 3.67 V, above the module's 3.6 V limit, so one Schottky diode per cell drops the rail to about 3.42 V and stops one cell charging the other.
+**Pulse supply.** One SF9 uplink draws 9.3 mC, which a capacitor alone would supply with 0.3 V of droop at 31 mF (56 mF at SF10). Fresh cells sit at about 3.67 V, above the module's 3.6 V limit, so one Schottky diode per cell drops the rail to about 3.42 V and stops one cell charging the other.
 
 **Detection.** The Earth's field is roughly 25 to 65 µT, well within the sensor's ±50 gauss (±5,000 µT) range. A line-dipole model calibrated to an assumed 10 µT under a parked van gives 10.6 µT for a car, 7.7 µT for a high-chassis box truck and 3.85 µT for a truck with little low steel, against a 3 µT threshold, while a van in the next lane gives 0.46 µT. The slot-center position sees vehicles anywhere in the slot and ignores neighbors; high-clearance trucks are the weak case, and R1 stays unverified until field data exist.
 
-**Link.** At 11.5 dBm EIRP the SF9 link budget is 141.0 dB. With 10 dB lost at road level and 10 dB to a van overhead, the 3GPP urban microcell street-canyon model leaves -6.0 dB at 1 km out of sight and 2.6 dB in line of sight; the range out of sight is about 350 m with a 10 dB fade margin. The original 1 km target is not reachable, so R4 is restated as a gateway within 300 m of each bay (LDZ-DDR-002), which the 353 m range meets on paper.
+**Link.** At 11.5 dBm EIRP the SF9 link budget is 141.0 dB. With 10 dB lost at road level and 10 dB to a van overhead, the 3GPP urban microcell street-canyon model at 915 MHz leaves -6.4 dB at 1 km out of sight and 2.6 dB in line of sight; the range out of sight is about 340 m with a 10 dB fade margin. The original 1 km target is not reachable, so R4 is restated as a gateway within 300 m of each bay (LDZ-DDR-002), which the 342 m range meets on paper.
 
 **Load.** A 49 kN wheel (half of a 10 t axle) on the 92 mm flat crown gives 7.38 MPa, or 9.59 MPa with a 1.3 dynamic factor: a factor of 5.4 on rigid cast polyurethane and 2.0 on the potting beneath. The bond is the weak point: a braking tire could push 34.3 kN sideways, 1.51 MPa on the bed, against about 1.0 MPa for two-part epoxy on asphalt at 20 °C and much less when hot. A vehicle parked inside the bay lines keeps its tires at least 275 mm from the puck axis, so only maneuvering wheels cross it; R6 is restated on that basis with an epoxy bed (LDZ-DDR-002) and stays at risk.
 
@@ -132,7 +136,7 @@ Choices 1 to 7 and 9 to 11 are decided by Amish, 2026-09-25: go with recommendat
 8. **Privacy by physics.** The puck senses only a magnetic field, so it cannot identify vehicles or people even if its firmware is changed.
 9. **Two-part road-marker epoxy bed** rather than a bitumen pad, for bond strength, with R6 restated around maneuvering wheels (LDZ-DDR-002, O3). Pull-off testing is TRL 4 work and on hold.
 10. **A gateway within 300 m of each bay** (R4 restated, LDZ-DDR-002, O2), which also keeps pucks at SF9 or faster for R2, R3 and R5.
-11. **Supply and potting details:** one Schottky diode per cell, an 85 °C hybrid pulse capacitor, a fully potted cavity and a 6 mm crown radius (LDZ-DDR-002, O6), and an 11-byte payload if the band is US915 (O7).
+11. **Supply and potting details:** one Schottky diode per cell, an 85 °C hybrid pulse capacitor, a fully potted cavity and a 6 mm crown radius (LDZ-DDR-002, O6), and an 11-byte payload (O7).
 12. **Sealed for life** (LDZ-DEC-001, item 3, decided 2026-10-02): the cells cannot be replaced and the firmware changes only over the air; over-the-air updates are planned for TRL 4. The base tray is printed ASA sanded with 80 grit (item 4), and the sign face shows button heads (item 5).
 13. **US915 as the default band** (LDZ-DEC-001, item 2, decided 2026-10-02), since the 11-byte payload already fits it.
 

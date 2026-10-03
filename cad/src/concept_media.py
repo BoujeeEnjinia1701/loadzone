@@ -117,12 +117,12 @@ context = [
 
 def media():
     key = ["One puck per 7 m vehicle slot; puck 150 mm dia, 31 mm high",
-           "Report in 18 s typical, 39 s worst at SF9 (LDZ-CAL-001)",
+           "Report in 18 s typical and worst at SF9, US915 (LDZ-CAL-001)",
            "Cell life 7.7 years at SF9 on 2 x AA Li-SOCl2 (derated 40 %)",
-           "Gateway within 300 m of the bay; 350 m reach from under a van",
+           "Gateway within 300 m of the bay; 340 m reach from under a van",
            "Two-puck kit about $116 (target $120); sign option $101 plus a FieldNode"]
     render_all(parts, project="LoadZone", title="Loading bay occupancy sensor concept", dwg_no="LDZ-DWG-010",
-               key_figures=key, date="2026-10-01", cut=False, context=context,
+               key_figures=key, date="2026-10-02", cut=False, context=context,
                flow={"title": "bay event flow, % of occupancy changes (estimates)", "unit": "%",
                      "stages": [("Bay state changes", 100), ("Puck detects", 97),
                                 ("LoRaWAN uplink", 96), ("Server bay state", 96),

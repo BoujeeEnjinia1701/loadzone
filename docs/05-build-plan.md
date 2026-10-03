@@ -3,7 +3,7 @@ doc_id: LDZ-BLD-001
 title: LoadZone prototype build plan
 project: LoadZone
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: 'Sign legend: placeholder for the prototype; drawn to the city''s rules and approved by its traffic engineer before street mounting (LDZ-DEC-001, item 6)'
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Antenna named for 915 MHz (US915 default band); first-check airtime figure for the 11-byte payload'
 ---
 
 # LoadZone prototype build plan
@@ -298,7 +302,7 @@ Buy to specification, not brand. Line numbers are those of the bill of materials
 
 - **Magnetometer (line 2).** 3-axis, 16-bit, LIS2MDL class, I2C, on a breakout about 22 x 18 mm.
 - **Radio module (line 3).** STM32WL-class LoRaWAN module (RAK3172 or Wio-E5 class), with a 2 MB SPI memory chip, two Schottky diodes, a 0.5 A fuse and a 36 x 56 mm piece of prototyping board.
-- **Antenna (line 4).** Flexible printed antenna for the band of the trial region, adhesive backed, with a u.FL lead.
+- **Antenna (line 4).** Flexible printed antenna for 915 MHz (the US915 band, the default), adhesive backed, with a u.FL lead.
 - **Cells and capacitor (line 5).** Two AA-size lithium thionyl chloride bobbin cells (ER14505 class, about 2.6 Ah) with factory-welded solder tabs, from a maker that publishes a data sheet; one hybrid pulse capacitor rated to 85 °C, at least 31 mF equivalent.
 - **Potting (line 6).** Semi-rigid polyurethane potting for electronics, low exotherm, about 175 cm³ per puck; PETG and ASA filament for the prints.
 - **Epoxy (line 7).** Two-part road-marker epoxy for raised pavement markers, about 70 cm³ per puck.
@@ -378,7 +382,7 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | Supply rail and sleep current | R3 | Bench, before the dome: rail voltage; current in sleep with a meter on its microamp range | About 3.4 V; sleep current near 6 µA |
 | Magnetometer sees steel | R1 | Bench: move a steel plate about 1 kg over the board at 300 mm and away again | The reading changes by well over the 3 µT threshold and returns |
 | Report time | R2 | Bench, puck near a gateway: change state with the steel plate; time to the state at the server | 60 s or less |
-| Airtime at SF9 | R5 | Gateway log of one uplink | About 206 ms on air for the 12-byte payload |
+| Airtime at SF9 | R5 | Gateway log of one uplink | About 206 ms on air for the 11-byte payload |
 | Only state and health leave the puck | R9 | Decode an uplink at the server | State, time since change, confidence, voltage, temperature, nothing else |
 | Potting complete | R8 | After cure: vents full, tap test round the dome | No hollow spot; resin flush at every hole |
 | Height and edge | R7 | Measure the bonded puck on the slab | 35 mm or less above the slab; no sharp edge |

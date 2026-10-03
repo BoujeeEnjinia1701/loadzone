@@ -314,3 +314,44 @@ The surface puck is now stated not to be for plowed streets. A sign must not go 
 ### Recommended next step
 
 Rerun the radio calculations for US915 and update BOM line 4. TRL 4 remains on hold by Amish's instruction.
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish approved all follow-up actions from the open-decision sign-off on 2026-10-02. trl stays 3; nothing was built or tested.
+
+### Approved follow-ups carried out
+
+1. Decision 2 (bom): done. BOM line 4 is now a 915 MHz (US915) flexible antenna; price unchanged at USD 3.00, indicative, same class as the 868 MHz part (`bom/bom.csv`, `bom/bom-notes.md`).
+2. Decision 2 (calcs): done. `docs/04-calcs/sizing.py` and LDZ-CAL-001 v0.4 rerun for US915 with the 11-byte payload: no duty cycle, 400 ms dwell limit (SF10 at 370.7 ms is inside it), uplinks SF7 to SF10 only, 915 MHz link. Airtime 25.5 s a day at SF9 and 46.0 s at SF10; worst report time 18.2 s at SF9 (was 38.6 s); cell life 7.7 years at SF9, 6.2 at SF10; SF9 range 342 m (was 353 m), 1.14 times the 300 m target.
+3. Decision 3 (docs): not done: over-the-air update planning belongs to the TRL 4 work list, and TRL 4 is on hold.
+4. Decision 6 (pictures): not done: the trial city is not chosen, so the sign legend cannot be drawn to its rules; BOM line 8 and the sign renders wait for that choice.
+5. Decision 10 (pictures): not done: render captions are made with the photoreal renders on Amish's Mac.
+6. Decision 1 (pictures): done for the appearance model: `cad/src/product_model.py` now takes the channel brackets, band clamps, button-head bolts and nyloc nuts straight from `build_sign()` in `model.py`, and the antenna height and board standoff height from the model. Photoreal renders, `media/card.png` and `media/social-preview.png` are not made here (Mac).
+
+### Requirement status changes
+
+None. R2 now reads "Met on paper" at every US915 rate (it was "at SF10 or faster"); R5 is at risk (not met at SF10); R4 stays met on paper at 342 m.
+
+### Cost and mass
+
+Two-puck kit USD 116.00 against the value-engineering target of USD 120 (USD 4.00 under the target); `budget_usd` unchanged. The host FieldNode on BOM line 11 is now shown at USD 139.50 (FND-CAL-001 base node, was USD 126.00), so a bay with the sign is USD 356.50 (was USD 343.00). Puck mass is unchanged at 451 g without the pad.
+
+### Documents changed
+
+- `docs/04-calcs/01-sizing.md` (LDZ-CAL-001 v0.4), `docs/04-calcs/results.csv`, `docs/04-calcs/sizing.py`.
+- `docs/02-concept.md` (LDZ-PRC-001 v0.7), `docs/03-requirements.md` (LDZ-REQ-001 v0.7), `docs/05-build-plan.md` (LDZ-BLD-001 v0.3: antenna band, 11-byte airtime check), `docs/06-design-decisions.md` (LDZ-DEC-001 v0.3: FieldNode price), `docs/decisions/0003-design-for-construction.md` (LDZ-DDR-003 v0.3: appearance model note).
+- `README.md`, `bom/bom.csv`, `bom/bom-notes.md`.
+- Drawing LDZ-DWG-001 is now Rev P4; concept media regenerated with the new key figures (`media/hero.png`, `concept-blueprint`, `cutaway.png`, `exploded.png`, `flow.png`, `model.glb`).
+- The model and the build plan pictures are unchanged: no geometry changed, so STEP, STL and the 21 build plan pictures were not regenerated.
+
+### Render scenes
+
+Exported to `/home/claude/renders/loadzone`: hero, exploded and detail (one .npz and .json each, plus `loadzone__jobs.json`). The renders themselves, captions with FieldNode named, `card.png` and `social-preview.png` are made next on Amish's Mac.
+
+### Cross-repo actions
+
+- FieldNode: confirm that USD 139.50 is the base-node price LoadZone should quote (FND-CAL-001); LoadZone line 11 now follows it.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

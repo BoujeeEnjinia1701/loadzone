@@ -5,7 +5,7 @@ mold parting line, radial anti-skid grooves and a recessed crown badge, a dark b
 epoxy bed with a squeezed-out bead, and dressed internals (cells, pulse capacitor, radio carrier
 with shielded module, magnetometer breakout, flexible antenna, clear potting). The sign option gets
 a painted face with a raised legend, a display housing with a polycarbonate window over the
-e-paper panel, stainless band clamps with bolts and a cable gland.
+e-paper panel, aluminium channel brackets with stainless worm-drive band clamps, button-head bolts and a cable gland.
 APPEARANCE MODEL ONLY: no tolerances, no fabrication detail. CONCEPT, NOT FOR FABRICATION.
 
 Every main dimension and interface comes from PARAMS and derived() in model.py.
@@ -28,7 +28,7 @@ sys.path.insert(0, str(HERE))
 
 from build123d import (Align, Axis, Box, Cone, Cylinder, Plane, Pos, RectangleRounded, Rot,
                        RegularPolygon, Text, extrude, fillet)
-from model import PARAMS, derived, build_parts
+from model import PARAMS, derived, build_parts, build_sign
 
 TITLE = "LoadZone: loading bay occupancy sensor puck and driver sign"
 
@@ -69,6 +69,7 @@ C_SHIELD = "#B8BEC6"
 C_CHIP = "#111827"
 C_CELL = "#7A1F1F"
 C_METAL = "#C3C8CE"
+C_ALU = "#AEB4BC"        # aluminium channel brackets (brushed)
 C_CAP = "#1F2937"
 C_FLEX = "#B45309"
 C_COPPER = "#D08A3C"
@@ -207,7 +208,7 @@ def _puck(P, D, m, add):
     # carrier board and LoRaWAN module (BOM 3)
     bx = P["board_x"]
     bl, bw, bt = P["board"]
-    zb0 = zb + 3
+    zb0 = zb + P["standoff_h"]
     pcb = Pos(bx, 0, zb0) * extrude(RectangleRounded(bl, bw, 2.0), amount=bt)
     for (hx, hy) in ((bx - bl / 2 + 3, -bw / 2 + 3), (bx + bl / 2 - 3, -bw / 2 + 3),
                      (bx - bl / 2 + 3, bw / 2 - 3), (bx + bl / 2 - 3, bw / 2 - 3)):
@@ -237,7 +238,7 @@ def _puck(P, D, m, add):
 
     # flexible PCB antenna (BOM 4) at the dome edge, with its trace pattern
     ax_, ay, az = P["ant"]
-    z0 = zb + 1
+    z0 = zb
     ant = Pos(P["ant_x"], 0, z0 + az / 2) * Box(ax_ * 0.6, ay, az)
     ant = Pos(-0.2, 0, 0) * ant
     add("Flexible PCB antenna", ant, C_FLEX, "plastic", 4, "internal", (34, 0, 44))
@@ -297,23 +298,14 @@ def _sign(P, add):
     gland = _fillet_try(gland, _bottom_edges(gland), [1.0, 0.5])
     add("Cable gland", at * gland, C_CHIP, "rubber", 9, "accessory", (E[0] + 60, 0, 0))
 
-    # band clamps (BOM 10): ring, folded bracket, clamp bolt and face bolts
-    pr, ct, cw = P["pole_r"], P["clamp_t"], P["clamp_w"]
-    rings, bolts = [], []
-    for zc2 in (P["clamp_inset"], sh - P["clamp_inset"]):
-        ring = Pos(0, 0, zc2) * (Cylinder(pr + ct, cw) - Cylinder(pr, cw + 2))
-        ring = _fillet_try(ring, [e for e in ring.edges() if _rad(e) > pr + ct - 0.1], [1.2, 0.6])
-        arm = Pos((pr + face_x) / 2 + 1, 0, zc2) * Box(face_x - pr + 2, 40, cw)
-        arm = _fillet_try(arm, arm.edges().filter_by(Axis.X), [2.0, 1.0])
-        ear = Pos(-pr - ct - 5, 0, zc2) * Box(12, 14, cw)
-        rings.append(ring + arm + ear)
-        bolts.append(Pos(-pr - ct - 5, -9, zc2) * Rot(90, 0, 0) * Cylinder(4.0, 4.0))
-        bolts.append(Pos(-pr - ct - 5, 8, zc2) * Rot(90, 0, 0) * Cylinder(3.6, 3.2))
-        for yy in (-12.0, 12.0):
-            b = Pos(fx + 0.9, yy, zc2) * Rot(0, 90, 0) * Cylinder(4.2, 1.8)
-            bolts.append(_fillet_try(b, b.faces().sort_by(Axis.X)[-1].edges(), [1.0, 0.5]))
-    add("Stainless band clamps", at * _union(rings), C_METAL, "metal", 10, "accessory", (-60, 0, 0))
-    add("Clamp and face bolts", at * _union(bolts), C_METAL, "metal", 10, "accessory", (-60, 0, 0))
+    # pole brackets (BOM 10): aluminium channel bolted to the back of the face, worm-drive band clamp
+    # round the pole through the flange slots; shapes come straight from model.build_sign
+    sg = build_sign(P)
+    br = sg["brackets"]
+    br = _fillet_try(br, br.edges().filter_by(Axis.Z), [1.0, 0.5])
+    add("Aluminium channel brackets", at * br, C_ALU, "metal", 10, "accessory", (-60, 0, 0))
+    add("Stainless band clamps", at * (sg["bands"] + sg["band_housings"]), C_METAL, "metal", 10, "accessory", (-60, 0, 0))
+    add("Button-head bolts and nyloc nuts", at * sg["bracket_bolts"], C_METAL, "metal", 10, "accessory", (-60, 0, 0))
 
 
 # ------------------------------------------------------------------ context
